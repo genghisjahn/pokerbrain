@@ -3,10 +3,25 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"sort"
 	"time"
 )
 
-var suits = []string{"Spades", "Hearts", "Clubs", "Diamonds"}
+var suits = []string{"♤", "♡", "♢", "♧"}
+
+const (
+	HighCard      = 100
+	Pair          = 200
+	TwoPair       = 300
+	ThreeOfKind   = 400
+	Straight      = 500
+	Flush         = 600
+	FullHouse     = 700
+	FourofKind    = 800
+	StraightFlush = 900
+	LOW           = false
+	HIGH          = true
+)
 
 type card struct {
 	Low  int
@@ -27,24 +42,31 @@ type table struct {
 	Cards [5]card
 }
 
+type hand struct {
+	Cards [5]card
+}
+
 func main() {
 	deck := buildDeck()
 	deck.Shuffle(5)
-	players := [10]player{}
-	for k, p := range players {
-		p.Cards[0] = deck.Deal()
-		p.Cards[1] = deck.Deal()
-		fmt.Println(k+1, p.Cards[0], p.Cards[1])
+	for h := 0; h < 10000; h++ {
+		hd1 := hand{}
+		hd2 := hand{}
+		deck = buildDeck()
+		deck.Shuffle(5)
+		for k := range hd1.Cards {
+			hd1.Cards[k] = deck.Deal()
+			hd2.Cards[k] = deck.Deal()
+		}
+		sort.Sort(hd1)
+		sort.Sort(hd2)
+		fmt.Println(hd1.Score(), hd1.Cards)
+		fmt.Println(hd2.Score(), hd2.Cards)
+		fmt.Println("-----")
+		if hd1.Score() == HighCard || hd2.Score() == HighCard {
+			break
+		}
 	}
-	t := table{}
-	for k := range t.Cards {
-		t.Cards[k] = deck.Deal()
-	}
-	fmt.Println("Table....")
-	fmt.Println("Flop:", t.Cards[0], ",", t.Cards[1], ",", t.Cards[2])
-	fmt.Println("Turn:", t.Cards[3])
-	fmt.Println("River:", t.Cards[4])
-	fmt.Println(len(deck.Cards))
 }
 
 func (d *deck) Deal() card {
@@ -53,8 +75,149 @@ func (d *deck) Deal() card {
 	return card
 }
 
+func (h *hand) Score() int {
+	var flush bool
+	var straight bool
+	var unique bool
+	suit := h.Cards[0].Suit
+	flush = true
+	for _, c := range h.Cards {
+		if c.Suit != suit {
+			flush = false
+		}
+	}
+	unique = checkunique(h.Cards)
+	straight = checkstraight(h.Cards)
+	ranks := checkranks(h.Cards)
+	if straight && flush {
+		return StraightFlush
+	}
+	if ranks == FullHouse {
+		return FullHouse
+	}
+	if flush {
+		return Flush
+	}
+	if straight {
+		return Straight
+	}
+	if ranks > 0 {
+		return ranks
+	}
+
+	if !straight && !flush && unique {
+		return HighCard
+	}
+	return 0
+}
+
+func checkranks(cards [5]card) int {
+	c := make(map[int]int)
+	for _, v := range cards {
+		if _, ok := c[v.High]; ok {
+			c[v.High]++
+			continue
+		}
+		c[v.High] = 1
+	}
+	var onepair bool
+	var twopair bool
+	var threekind bool
+	var fourkind bool
+	for _, v := range c {
+		if v == 2 {
+			if onepair {
+				twopair = true
+			}
+			onepair = true
+		}
+		if v == 3 {
+			threekind = true
+		}
+		if v == 4 {
+			fourkind = true
+		}
+	}
+	if fourkind {
+		return FourofKind
+	}
+	if threekind && onepair {
+		return FullHouse
+	}
+	if threekind && !onepair {
+		return ThreeOfKind
+	}
+	if twopair {
+		return TwoPair
+	}
+	if onepair {
+		return Pair
+	}
+	return 0
+}
+
+func checkunique(cards [5]card) bool {
+	c := make(map[int]int)
+	for _, v := range cards {
+		if _, ok := c[v.High]; ok {
+			return false
+		}
+		c[v.High] = v.High
+	}
+	return true
+}
+
+func checkstraight(cards [5]card) bool {
+	//replace this with checkunique
+	c := make(map[int]int)
+	for _, v := range cards {
+		if _, ok := c[v.High]; ok {
+			return false
+		}
+		c[v.High] = v.High
+	}
+	highMin, highMax := getbounds(HIGH, cards)
+	lowMin, lowMax := getbounds(LOW, cards)
+	if highMax-highMin == 4 {
+		return true
+	}
+	if lowMax-lowMin == 4 {
+		return true
+	}
+	return false
+}
+
+func checkMaxDiff(min, max int) bool {
+	if max-min == 5 {
+		return true
+	}
+	return false
+}
+
+func getbounds(highlow bool, c [5]card) (int, int) {
+	min := 15
+	max := 0
+	vals := [5]int{}
+	for k := range c {
+		if highlow == HIGH {
+			vals[k] = c[k].High
+			continue
+		}
+		vals[k] = c[k].Low
+	}
+	for _, v := range vals {
+		if v < min {
+			min = v
+		}
+		if v > max {
+			max = v
+		}
+	}
+	return min, max
+}
+
 func (c card) String() string {
-	return fmt.Sprintf("%s of %s", c.Name, c.Suit)
+	return fmt.Sprintf("%s%s", c.Name, c.Suit)
 }
 
 func (d *deck) Shuffle(num int) {
@@ -67,6 +230,18 @@ func (d *deck) Shuffle(num int) {
 	}
 }
 
+func compareHands(hands ...hand) []hand {
+	winners := []hand{}
+	for _, h := range hands {
+		sort.Sort(h)
+	}
+	return winners
+}
+
+func (a hand) Len() int           { return len(a.Cards) }
+func (a hand) Swap(i, j int)      { a.Cards[i], a.Cards[j] = a.Cards[j], a.Cards[i] }
+func (a hand) Less(i, j int) bool { return a.Cards[i].High < a.Cards[j].High }
+
 func buildDeck() deck {
 	var d = deck{}
 	for _, v := range suits {
@@ -74,20 +249,20 @@ func buildDeck() deck {
 			c := card{Low: i, Suit: v, High: i}
 			if i == 1 {
 				c.High = 14
-				c.Name = "Ace"
+				c.Name = "A"
 			}
 			if i > 1 && i < 11 {
 				c.Name = fmt.Sprintf("%v", i)
 			}
 
 			if i == 11 {
-				c.Name = "Jack"
+				c.Name = "J"
 			}
 			if i == 12 {
-				c.Name = "Queen"
+				c.Name = "Q"
 			}
 			if i == 13 {
-				c.Name = "King"
+				c.Name = "K"
 			}
 			d.Cards = append(d.Cards, c)
 		}
