@@ -46,6 +46,7 @@ type table struct {
 
 type hand struct {
 	Cards [5]card
+	Value int
 }
 
 func main() {
@@ -81,13 +82,16 @@ func (h *hand) Score() int {
 	var flush bool
 	var straight bool
 	var unique bool
+	var sval int = 0
 	suit := h.Cards[0].Suit
 	flush = true
 	for _, c := range h.Cards {
+		sval += c.Value
 		if c.Suit != suit {
 			flush = false
 		}
 	}
+	h.Value = sval
 	unique = checkunique(h.Cards)
 	straight = checkstraight(h.Cards)
 	ranks := checkranks(h.Cards)
