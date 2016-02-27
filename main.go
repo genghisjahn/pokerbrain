@@ -60,7 +60,7 @@ func main() {
 			hd1.Cards[k] = deck.Deal()
 			hd2.Cards[k] = deck.Deal()
 		}
-		if hd1.Score() == Straight && hd2.Score() == Straight {
+		if hd1.Score() == Flush && hd2.Score() == Flush {
 			sort.Sort(sort.Reverse(&hd1))
 			sort.Sort(sort.Reverse(&hd2))
 			fmt.Println(hd1.Score(), hd1.Cards)
@@ -242,7 +242,7 @@ func compareHands(hands ...hand) []hand {
 
 func (a *hand) Len() int           { return len(a.Cards) }
 func (a *hand) Swap(i, j int)      { a.Cards[i], a.Cards[j] = a.Cards[j], a.Cards[i] }
-func (a *hand) Less(i, j int) bool { return a.Cards[i].High < a.Cards[j].High }
+func (a *hand) Less(i, j int) bool { return a.Cards[i].Value < a.Cards[j].Value }
 
 func buildDeck() deck {
 	var d = deck{}
