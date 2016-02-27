@@ -58,8 +58,8 @@ func main() {
 			hd1.Cards[k] = deck.Deal()
 			hd2.Cards[k] = deck.Deal()
 		}
-		sort.Sort(hd1)
-		sort.Sort(hd2)
+		sort.Sort(sort.Reverse(&hd1))
+		sort.Sort(sort.Reverse(&hd2))
 		fmt.Println(hd1.Score(), hd1.Cards)
 		fmt.Println(hd2.Score(), hd2.Cards)
 		fmt.Println("-----")
@@ -233,14 +233,14 @@ func (d *deck) Shuffle(num int) {
 func compareHands(hands ...hand) []hand {
 	winners := []hand{}
 	for _, h := range hands {
-		sort.Sort(h)
+		sort.Sort(&h)
 	}
 	return winners
 }
 
-func (a hand) Len() int           { return len(a.Cards) }
-func (a hand) Swap(i, j int)      { a.Cards[i], a.Cards[j] = a.Cards[j], a.Cards[i] }
-func (a hand) Less(i, j int) bool { return a.Cards[i].High < a.Cards[j].High }
+func (a *hand) Len() int           { return len(a.Cards) }
+func (a *hand) Swap(i, j int)      { a.Cards[i], a.Cards[j] = a.Cards[j], a.Cards[i] }
+func (a *hand) Less(i, j int) bool { return a.Cards[i].High < a.Cards[j].High }
 
 func buildDeck() deck {
 	var d = deck{}
