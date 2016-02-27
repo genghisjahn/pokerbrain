@@ -42,6 +42,7 @@ type player struct {
 
 type table struct {
 	Cards [5]card
+	Hands []hand
 }
 
 type hand struct {
@@ -247,6 +248,10 @@ func compareHands(hands ...hand) []hand {
 func (a *hand) Len() int           { return len(a.Cards) }
 func (a *hand) Swap(i, j int)      { a.Cards[i], a.Cards[j] = a.Cards[j], a.Cards[i] }
 func (a *hand) Less(i, j int) bool { return a.Cards[i].Value < a.Cards[j].Value }
+
+func (t *table) Len() int           { return len(t.Hands) }
+func (t *table) Swap(i, j int)      { t.Hands[i], t.Hands[j] = t.Hands[j], t.Hands[i] }
+func (t *table) Less(i, j int) bool { return t.Hands[i].Value < t.Hands[j].Value }
 
 func buildDeck() deck {
 	var d = deck{}
