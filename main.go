@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"math/rand"
 	"sort"
 	"time"
@@ -10,24 +11,25 @@ import (
 var suits = []string{"♤", "♡", "♢", "♧"}
 
 const (
-	HighCard      = 100
-	Pair          = 200
-	TwoPair       = 300
-	ThreeOfKind   = 400
-	Straight      = 500
-	Flush         = 600
-	FullHouse     = 700
-	FourofKind    = 800
-	StraightFlush = 900
+	HighCard      = 20000
+	Pair          = 30000
+	TwoPair       = 40000
+	ThreeOfKind   = 50000
+	Straight      = 60000
+	Flush         = 70000
+	FullHouse     = 80000
+	FourofKind    = 90000
+	StraightFlush = 100000
 	LOW           = false
 	HIGH          = true
 )
 
 type card struct {
-	Low  int
-	High int
-	Suit string
-	Name string
+	Low   int
+	High  int
+	Suit  string
+	Name  string
+	Value int
 }
 
 type deck struct {
@@ -49,7 +51,7 @@ type hand struct {
 func main() {
 	deck := buildDeck()
 	deck.Shuffle(5)
-	for h := 0; h < 10000; h++ {
+	for h := 0; h < 100000; h++ {
 		hd1 := hand{}
 		hd2 := hand{}
 		deck = buildDeck()
@@ -58,12 +60,12 @@ func main() {
 			hd1.Cards[k] = deck.Deal()
 			hd2.Cards[k] = deck.Deal()
 		}
-		sort.Sort(sort.Reverse(&hd1))
-		sort.Sort(sort.Reverse(&hd2))
-		fmt.Println(hd1.Score(), hd1.Cards)
-		fmt.Println(hd2.Score(), hd2.Cards)
-		fmt.Println("-----")
-		if hd1.Score() == HighCard || hd2.Score() == HighCard {
+		if hd1.Score() == Straight && hd2.Score() == Straight {
+			sort.Sort(sort.Reverse(&hd1))
+			sort.Sort(sort.Reverse(&hd2))
+			fmt.Println(hd1.Score(), hd1.Cards)
+			fmt.Println(hd2.Score(), hd2.Cards)
+			fmt.Println("-----")
 			break
 		}
 	}
@@ -246,7 +248,7 @@ func buildDeck() deck {
 	var d = deck{}
 	for _, v := range suits {
 		for i := 1; i < 14; i++ {
-			c := card{Low: i, Suit: v, High: i}
+			c := card{Low: i, Suit: v, High: i, Value: int(math.Pow(2, float64(i)))}
 			if i == 1 {
 				c.High = 14
 				c.Name = "A"
