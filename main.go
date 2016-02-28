@@ -12,14 +12,14 @@ var suits = []string{"♤", "♡", "♢", "♧"}
 
 const (
 	HighCard      = 20000
-	Pair          = 30000
-	TwoPair       = 40000
-	ThreeOfKind   = 50000
-	Straight      = 60000
-	Flush         = 70000
-	FullHouse     = 80000
-	FourofKind    = 90000
-	StraightFlush = 100000
+	Pair          = 40000
+	TwoPair       = 60000
+	ThreeOfKind   = 70000
+	Straight      = 80000
+	Flush         = 90000
+	FullHouse     = 100000
+	FourofKind    = 120000
+	StraightFlush = 140000
 	LOW           = false
 	HIGH          = true
 )
@@ -48,6 +48,7 @@ type table struct {
 type hand struct {
 	Cards [5]card
 	Value int
+	Name  string
 }
 
 func main() {
@@ -62,7 +63,9 @@ func main() {
 			hd1.Cards[k] = deck.Deal()
 			hd2.Cards[k] = deck.Deal()
 		}
-		if hd1.Score() == Straight && hd2.Score() == Straight {
+		hd1.Score()
+		hd2.Score()
+		if hd1.Name == "Pair" && hd2.Name == "Pair" {
 			sort.Sort(sort.Reverse(&hd1))
 			sort.Sort(sort.Reverse(&hd2))
 			fmt.Println(hd1.Score(), hd1.Cards)
@@ -89,7 +92,7 @@ func (h *hand) Score() int {
 	var flush bool
 	var straight bool
 	var unique bool
-	var sval int = 0
+	var sval int
 	suit := h.Cards[0].Suit
 	flush = true
 	for _, c := range h.Cards {
@@ -98,28 +101,49 @@ func (h *hand) Score() int {
 			flush = false
 		}
 	}
-	h.Value = sval
 	unique = checkunique(h.Cards)
 	straight = checkstraight(h.Cards)
 	ranks := checkranks(h.Cards)
 	if straight && flush {
+		h.Name = "Straight Flush"
+		h.Value = sval + StraightFlush
 		return StraightFlush
 	}
 	if ranks == FullHouse {
+		h.Name = "Full House"
+		h.Value = sval + FullHouse
 		return FullHouse
 	}
 	if flush {
+		h.Name = "Flush"
+		h.Value = sval + Flush
 		return Flush
 	}
 	if straight {
+		h.Name = "Straight"
+		h.Value = sval + Straight
 		return Straight
 	}
 	if ranks > 0 {
+		if ranks == FourofKind {
+			h.Name = "Four of a Kind"
+		}
+		if ranks == ThreeOfKind {
+			h.Name = "Three of a Kind"
+		}
+		if ranks == TwoPair {
+			h.Name = "Two Pair"
+		}
+		if ranks == Pair {
+			h.Name = "Pair"
+		}
+		h.Value = sval + ranks
 		return ranks
 	}
 
 	if !straight && !flush && unique {
-		return HighCard
+		h.Name = "High Card"
+		return HighCard + sval
 	}
 	return 0
 }
@@ -249,9 +273,9 @@ func compareHands(t table) []hand {
 	return winners
 }
 
-func (a *hand) Len() int           { return len(a.Cards) }
-func (a *hand) Swap(i, j int)      { a.Cards[i], a.Cards[j] = a.Cards[j], a.Cards[i] }
-func (a *hand) Less(i, j int) bool { return a.Cards[i].Value < a.Cards[j].Value }
+func (h *hand) Len() int           { return len(h.Cards) }
+func (h *hand) Swap(i, j int)      { h.Cards[i], h.Cards[j] = h.Cards[j], h.Cards[i] }
+func (h *hand) Less(i, j int) bool { return h.Cards[i].Value < h.Cards[j].Value }
 
 func (t *table) Len() int           { return len(t.Hands) }
 func (t *table) Swap(i, j int)      { t.Hands[i], t.Hands[j] = t.Hands[j], t.Hands[i] }
