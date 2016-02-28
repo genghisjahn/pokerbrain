@@ -62,12 +62,18 @@ func main() {
 			hd1.Cards[k] = deck.Deal()
 			hd2.Cards[k] = deck.Deal()
 		}
-		if hd1.Score() == Flush && hd2.Score() == Flush {
+		if hd1.Score() == TwoPair && hd2.Score() == TwoPair {
 			sort.Sort(sort.Reverse(&hd1))
 			sort.Sort(sort.Reverse(&hd2))
 			fmt.Println(hd1.Score(), hd1.Cards)
 			fmt.Println(hd2.Score(), hd2.Cards)
 			fmt.Println("-----")
+			t := table{}
+			t.Hands = append(t.Hands, hd1, hd2)
+
+			ch := compareHands(t)
+			fmt.Println("Compare:")
+			fmt.Println(ch)
 			break
 		}
 	}
@@ -237,10 +243,11 @@ func (d *deck) Shuffle(num int) {
 	}
 }
 
-func compareHands(hands ...hand) []hand {
+func compareHands(t table) []hand {
 	winners := []hand{}
-	for _, h := range hands {
-		sort.Sort(&h)
+	sort.Sort(sort.Reverse(&t))
+	for _, h := range t.Hands {
+		winners = append(winners, h)
 	}
 	return winners
 }
