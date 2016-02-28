@@ -12,14 +12,14 @@ var suits = []string{"♤", "♡", "♢", "♧"}
 
 const (
 	HighCard      = 20000
-	Pair          = 30000
-	TwoPair       = 40000
-	ThreeOfKind   = 50000
-	Straight      = 60000
-	Flush         = 70000
-	FullHouse     = 80000
-	FourofKind    = 90000
-	StraightFlush = 100000
+	Pair          = 40000
+	TwoPair       = 60000
+	ThreeOfKind   = 70000
+	Straight      = 80000
+	Flush         = 90000
+	FullHouse     = 100000
+	FourofKind    = 120000
+	StraightFlush = 140000
 	LOW           = false
 	HIGH          = true
 )
