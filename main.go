@@ -264,7 +264,11 @@ func buildDeck() deck {
 	var d = deck{}
 	for _, v := range suits {
 		for i := 1; i < 14; i++ {
-			c := card{Low: i, Suit: v, High: i, Value: int(math.Pow(2, float64(i)))}
+			var a = i
+			if i == 1 {
+				a = 14
+			}
+			c := card{Low: i, Suit: v, High: i, Value: int(math.Pow(2, float64(a)))}
 			if i == 1 {
 				c.High = 14
 				c.Name = "A"
