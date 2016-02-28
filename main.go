@@ -62,7 +62,7 @@ func main() {
 			hd1.Cards[k] = deck.Deal()
 			hd2.Cards[k] = deck.Deal()
 		}
-		if hd1.Score() == TwoPair && hd2.Score() == TwoPair {
+		if hd1.Score() == Straight && hd2.Score() == Straight {
 			sort.Sort(sort.Reverse(&hd1))
 			sort.Sort(sort.Reverse(&hd2))
 			fmt.Println(hd1.Score(), hd1.Cards)
@@ -182,13 +182,10 @@ func checkunique(cards [5]card) bool {
 
 func checkstraight(cards [5]card) bool {
 	//replace this with checkunique
-	c := make(map[int]int)
-	for _, v := range cards {
-		if _, ok := c[v.High]; ok {
-			return false
-		}
-		c[v.High] = v.High
+	if !checkunique(cards) {
+		return false
 	}
+
 	highMin, highMax := getbounds(HIGH, cards)
 	lowMin, lowMax := getbounds(LOW, cards)
 	if highMax-highMin == 4 {
