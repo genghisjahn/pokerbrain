@@ -148,15 +148,28 @@ func (h *hand) Score() int {
 	return 0
 }
 
+type rankCard struct {
+	Rank  int
+	Count int
+}
+
 func checkranks(cards [5]card) int {
 	c := make(map[int]int)
+	rCards := []rankCard{}
 	for _, v := range cards {
 		if _, ok := c[v.High]; ok {
 			c[v.High]++
+			var rc rankCard
+			rc.Rank = v.High
+			rc.Count = c[v.High]
+			rCards = append(rCards, rc)
 			continue
 		}
 		c[v.High] = 1
 	}
+	fmt.Println("Rank Cards Map:")
+	fmt.Println(c)
+	fmt.Println("-----")
 	var onepair bool
 	var twopair bool
 	var threekind bool
