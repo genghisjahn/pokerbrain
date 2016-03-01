@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"math/rand"
 	"sort"
 	"time"
@@ -66,6 +65,7 @@ func main() {
 		hd1.Score()
 		hd2.Score()
 		if hd1.Name == "Pair" && hd2.Name == "Pair" {
+
 			sort.Sort(sort.Reverse(&hd1))
 			sort.Sort(sort.Reverse(&hd2))
 			fmt.Println(hd1.Score(), hd1.Cards)
@@ -148,28 +148,28 @@ func (h *hand) Score() int {
 	return 0
 }
 
-type rankCard struct {
-	Rank  int
-	Count int
-}
-
 func checkranks(cards [5]card) int {
 	c := make(map[int]int)
-	rCards := []rankCard{}
 	for _, v := range cards {
 		if _, ok := c[v.High]; ok {
 			c[v.High]++
-			var rc rankCard
-			rc.Rank = v.High
-			rc.Count = c[v.High]
-			rCards = append(rCards, rc)
 			continue
 		}
 		c[v.High] = 1
 	}
-	fmt.Println("Rank Cards Map:")
-	fmt.Println(c)
-	fmt.Println("-----")
+
+	var kickers = []card{}
+	var rankCards = []card{}
+	for _, v := range cards {
+		if c[v.High] == 1 {
+			kickers = append(kickers, v)
+		} else {
+			rankCards = append(rankCards, v)
+		}
+	}
+
+	fmt.Println("Kickers:", kickers)
+
 	var onepair bool
 	var twopair bool
 	var threekind bool
@@ -302,7 +302,7 @@ func buildDeck() deck {
 			if i == 1 {
 				a = 14
 			}
-			c := card{Low: i, Suit: v, High: i, Value: int(math.Pow(2, float64(a)))}
+			c := card{Low: i, Suit: v, High: i, Value: a}
 			if i == 1 {
 				c.High = 14
 				c.Name = "A"
