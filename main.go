@@ -101,6 +101,7 @@ func (h *hand) Score() int {
 	unique = checkunique(h.Cards)
 	straight = checkstraight(h.Cards)
 	ranks := checkranks(h.Cards)
+	fmt.Println("ranks:", ranks)
 	if straight && flush {
 		h.Name = "Straight Flush"
 		return StraightFlush
@@ -144,7 +145,7 @@ type rankResult struct {
 	Values [15]byte
 }
 
-func checkranks(cards [5]card) int {
+func checkranks(cards [5]card) (int, [2]int) {
 	c := make(map[int]int)
 	for _, v := range cards {
 		if _, ok := c[v.High]; ok {
@@ -179,8 +180,15 @@ func checkranks(cards [5]card) int {
 			fourkind = true
 		}
 	}
+
 	if fourkind {
-		return FourofKind
+		vals := [2]int{}
+		for k, c1 := range c {
+			if c1 == 4 {
+				vals[0] = k
+			}
+		}
+		return FourofKind, vals
 	}
 	if threekind && onepair {
 		return FullHouse
