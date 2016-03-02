@@ -24,11 +24,10 @@ const (
 )
 
 type card struct {
-	Low   int
-	High  int
-	Suit  string
-	Name  string
-	Value int
+	Low  int
+	High int
+	Suit string
+	Name string
 }
 
 type deck struct {
@@ -92,11 +91,9 @@ func (h *hand) Score() int {
 	var flush bool
 	var straight bool
 	var unique bool
-	var sval int
 	suit := h.Cards[0].Suit
 	flush = true
 	for _, c := range h.Cards {
-		sval += c.Value
 		if c.Suit != suit {
 			flush = false
 		}
@@ -106,22 +103,18 @@ func (h *hand) Score() int {
 	ranks := checkranks(h.Cards)
 	if straight && flush {
 		h.Name = "Straight Flush"
-		h.Value = sval + StraightFlush
 		return StraightFlush
 	}
 	if ranks == FullHouse {
 		h.Name = "Full House"
-		h.Value = sval + FullHouse
 		return FullHouse
 	}
 	if flush {
 		h.Name = "Flush"
-		h.Value = sval + Flush
 		return Flush
 	}
 	if straight {
 		h.Name = "Straight"
-		h.Value = sval + Straight
 		return Straight
 	}
 	if ranks > 0 {
@@ -137,15 +130,18 @@ func (h *hand) Score() int {
 		if ranks == Pair {
 			h.Name = "Pair"
 		}
-		h.Value = sval + ranks
 		return ranks
 	}
 
 	if !straight && !flush && unique {
 		h.Name = "High Card"
-		return HighCard + sval
+		return HighCard
 	}
 	return 0
+}
+
+type rankResult struct {
+	Values [15]byte
 }
 
 func checkranks(cards [5]card) int {
@@ -159,16 +155,11 @@ func checkranks(cards [5]card) int {
 	}
 
 	var kickers = []card{}
-	var rankCards = []card{}
 	for _, v := range cards {
 		if c[v.High] == 1 {
 			kickers = append(kickers, v)
-		} else {
-			rankCards = append(rankCards, v)
 		}
 	}
-
-	fmt.Println("Kickers:", kickers)
 
 	var onepair bool
 	var twopair bool
@@ -288,7 +279,7 @@ func compareHands(t table) []hand {
 
 func (h *hand) Len() int           { return len(h.Cards) }
 func (h *hand) Swap(i, j int)      { h.Cards[i], h.Cards[j] = h.Cards[j], h.Cards[i] }
-func (h *hand) Less(i, j int) bool { return h.Cards[i].Value < h.Cards[j].Value }
+func (h *hand) Less(i, j int) bool { return h.Cards[i].High < h.Cards[j].High }
 
 func (t *table) Len() int           { return len(t.Hands) }
 func (t *table) Swap(i, j int)      { t.Hands[i], t.Hands[j] = t.Hands[j], t.Hands[i] }
@@ -298,11 +289,11 @@ func buildDeck() deck {
 	var d = deck{}
 	for _, v := range suits {
 		for i := 1; i < 14; i++ {
-			var a = i
-			if i == 1 {
-				a = 14
-			}
-			c := card{Low: i, Suit: v, High: i, Value: a}
+			// var a = i
+			// if i == 1 {
+			// 	a = 14
+			// }
+			c := card{Low: i, Suit: v, High: i}
 			if i == 1 {
 				c.High = 14
 				c.Name = "A"
