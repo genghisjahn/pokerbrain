@@ -6,6 +6,8 @@ import (
 	"sort"
 	"strconv"
 	"time"
+
+	"github.com/genghisjahn/pokerbrain/poker"
 )
 
 var suits = []string{"♤", "♡", "♢", "♧"}
@@ -24,28 +26,21 @@ const (
 	HIGH          = true
 )
 
-type card struct {
-	Low  int
-	High int
-	Suit string
-	Name string
-}
-
 type deck struct {
-	Cards []card
+	Cards []poker.Card
 }
 
 type player struct {
-	Cards [2]card
+	Cards [2]poker.Card
 }
 
 type table struct {
-	Cards [5]card
+	Cards [5]poker.Card
 	Hands []hand
 }
 
 type hand struct {
-	Cards [5]card
+	Cards [5]poker.Card
 	Name  string
 }
 
@@ -73,7 +68,7 @@ func main() {
 
 }
 
-func (d *deck) Deal() card {
+func (d *deck) Deal() poker.Card {
 	card := d.Cards[0]
 	d.Cards = append(d.Cards[:0], d.Cards[1:]...)
 	return card
@@ -176,7 +171,7 @@ type rankResult struct {
 	Values [15]byte
 }
 
-func checkranks(cards [5]card) (string, [2]int) {
+func checkranks(cards [5]poker.Card) (string, [2]int) {
 	c := make(map[int]int)
 	for _, v := range cards {
 		if _, ok := c[v.High]; ok {
@@ -186,7 +181,7 @@ func checkranks(cards [5]card) (string, [2]int) {
 		c[v.High] = 1
 	}
 
-	var kickers = []card{}
+	var kickers = []poker.Card{}
 	for _, v := range cards {
 		if c[v.High] == 1 {
 			kickers = append(kickers, v)
@@ -265,7 +260,7 @@ func checkranks(cards [5]card) (string, [2]int) {
 	return "", vals
 }
 
-func checkunique(cards [5]card) bool {
+func checkunique(cards [5]poker.Card) bool {
 	c := make(map[int]int)
 	for _, v := range cards {
 		if _, ok := c[v.High]; ok {
@@ -276,7 +271,7 @@ func checkunique(cards [5]card) bool {
 	return true
 }
 
-func checkstraight(cards [5]card) bool {
+func checkstraight(cards [5]poker.Card) bool {
 	//replace this with checkunique
 	if !checkunique(cards) {
 		return false
@@ -300,7 +295,7 @@ func checkMaxDiff(min, max int) bool {
 	return false
 }
 
-func getbounds(highlow bool, c [5]card) (int, int) {
+func getbounds(highlow bool, c [5]poker.Card) (int, int) {
 	min := 15
 	max := 0
 	vals := [5]int{}
@@ -320,10 +315,6 @@ func getbounds(highlow bool, c [5]card) (int, int) {
 		}
 	}
 	return min, max
-}
-
-func (c card) String() string {
-	return fmt.Sprintf("%s%s", c.Name, c.Suit)
 }
 
 func (d *deck) Shuffle(num int) {
@@ -359,7 +350,7 @@ func buildDeck() deck {
 	for _, v := range suits {
 		for i := 1; i < 14; i++ {
 
-			c := card{Low: i, Suit: v, High: i}
+			c := poker.Card{Low: i, Suit: v, High: i}
 			if i == 1 {
 				c.High = 14
 				c.Name = "A"
