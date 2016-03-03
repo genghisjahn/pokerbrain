@@ -7,8 +7,8 @@ type Table struct {
 	Hands          []Hand
 }
 
-func compareHands(t Table) []hand {
-	winners := []hand{}
+func (t Table) CompareHands() []Hand {
+	winners := []Hand{}
 	sort.Sort(sort.Reverse(&t))
 	for _, h := range t.Hands {
 		sort.Sort(sort.Reverse(&h))

@@ -1,11 +1,6 @@
 package poker
 
-import (
-	"sort"
-	"strconv"
-
-	"github.com/genghisjahn/pokerbrain/poker"
-)
+import "strconv"
 
 var suits = []string{"♤", "♡", "♢", "♧"}
 
@@ -50,7 +45,7 @@ func checkstraight(cards [5]Card) bool {
 	return false
 }
 
-func checkranks(cards [5]poker.Card) (string, [2]int) {
+func checkranks(cards [5]Card) (string, [2]int) {
 	c := make(map[int]int)
 	for _, v := range cards {
 		if _, ok := c[v.High]; ok {
@@ -60,7 +55,7 @@ func checkranks(cards [5]poker.Card) (string, [2]int) {
 		c[v.High] = 1
 	}
 
-	var kickers = []poker.Card{}
+	var kickers = []Card{}
 	for _, v := range cards {
 		if c[v.High] == 1 {
 			kickers = append(kickers, v)
@@ -137,16 +132,6 @@ func checkranks(cards [5]poker.Card) (string, [2]int) {
 		return Pair, vals
 	}
 	return "", vals
-}
-
-func compareHands(t Table) []hand {
-	winners := []hand{}
-	sort.Sort(sort.Reverse(&t))
-	for _, h := range t.Hands {
-		sort.Sort(sort.Reverse(&h))
-		winners = append(winners, h)
-	}
-	return winners
 }
 
 func checkMaxDiff(min, max int) bool {
