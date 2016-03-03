@@ -100,8 +100,8 @@ func (h *hand) Score() int {
 	}
 	unique = checkunique(h.Cards)
 	straight = checkstraight(h.Cards)
-	ranks := checkranks(h.Cards)
-	fmt.Println("ranks:", ranks)
+	ranks, vals := checkranks(h.Cards)
+	fmt.Println("ranks:", ranks, vals)
 	if straight && flush {
 		h.Name = "Straight Flush"
 		return StraightFlush
@@ -181,8 +181,8 @@ func checkranks(cards [5]card) (int, [2]int) {
 		}
 	}
 
+	vals := [2]int{}
 	if fourkind {
-		vals := [2]int{}
 		for k, c1 := range c {
 			if c1 == 4 {
 				vals[0] = k
@@ -191,18 +191,47 @@ func checkranks(cards [5]card) (int, [2]int) {
 		return FourofKind, vals
 	}
 	if threekind && onepair {
-		return FullHouse
+		for k, c1 := range c {
+			if c1 == 3 {
+				vals[0] = k
+			}
+			if c1 == 2 {
+				vals[1] = k
+			}
+		}
+		return FullHouse, vals
 	}
 	if threekind && !onepair {
-		return ThreeOfKind
+		for k, c1 := range c {
+			if c1 == 3 {
+				vals[0] = k
+			}
+		}
+		return ThreeOfKind, vals
 	}
 	if twopair {
-		return TwoPair
+		for k, c1 := range c {
+			if c1 == 2 {
+				vals[0] = k
+			}
+			if c1 == 2 {
+				vals[1] = k
+			}
+		}
+		if vals[1] > vals[0] {
+			vals[0], vals[1] = vals[1], vals[0]
+		}
+		return TwoPair, vals
 	}
 	if onepair {
-		return Pair
+		for k, c1 := range c {
+			if c1 == 2 {
+				vals[0] = k
+			}
+		}
+		return Pair, vals
 	}
-	return 0
+	return 0, vals
 }
 
 func checkunique(cards [5]card) bool {
