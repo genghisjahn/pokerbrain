@@ -1,6 +1,7 @@
 package poker
 
 import (
+	"sort"
 	"strconv"
 
 	"github.com/genghisjahn/pokerbrain/poker"
@@ -136,6 +137,16 @@ func checkranks(cards [5]poker.Card) (string, [2]int) {
 		return Pair, vals
 	}
 	return "", vals
+}
+
+func compareHands(t Table) []hand {
+	winners := []hand{}
+	sort.Sort(sort.Reverse(&t))
+	for _, h := range t.Hands {
+		sort.Sort(sort.Reverse(&h))
+		winners = append(winners, h)
+	}
+	return winners
 }
 
 func checkMaxDiff(min, max int) bool {
