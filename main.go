@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 	"sort"
+	"strconv"
 	"time"
 )
 
@@ -45,33 +46,36 @@ type table struct {
 
 type hand struct {
 	Cards [5]card
-	Value int
 	Name  string
 }
 
 func main() {
 	deck := buildDeck()
 	deck.Shuffle(5)
-	for h := 0; h < 100000; h++ {
+	for h := 0; h < 200000; h++ {
 		hd1 := hand{}
 		hd2 := hand{}
+		hd3 := hand{}
 		deck = buildDeck()
 		deck.Shuffle(5)
 		for k := range hd1.Cards {
 			hd1.Cards[k] = deck.Deal()
 			hd2.Cards[k] = deck.Deal()
+			hd3.Cards[k] = deck.Deal()
 		}
 		hd1.Score()
 		hd2.Score()
-		if hd1.Name == "Pair" && hd2.Name == "Pair" {
+		hd3.Score()
+		if hd1.Name == "Pair" && hd2.Name == "Pair" && hd3.Name == "Pair" {
 
 			sort.Sort(sort.Reverse(&hd1))
 			sort.Sort(sort.Reverse(&hd2))
 			fmt.Println(hd1.Score(), hd1.Cards)
 			fmt.Println(hd2.Score(), hd2.Cards)
+			fmt.Println(hd3.Score(), hd3.Cards)
 			fmt.Println("-----")
 			t := table{}
-			t.Hands = append(t.Hands, hd1, hd2)
+			t.Hands = append(t.Hands, hd1, hd2, hd3)
 
 			ch := compareHands(t)
 			fmt.Println("Compare:")
@@ -87,7 +91,23 @@ func (d *deck) Deal() card {
 	return card
 }
 
-func (h *hand) Score() int {
+func getfinalscore(vals []int) string {
+	strval := ""
+	pz := map[int]int{1: 1, 2: 2, 3: 3, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 11, 12: 12, 13: 13, 14: 14}
+	for k, v := range vals {
+		a := strconv.Itoa(v)
+		if _, ok := pz[k]; ok {
+
+			if v < 10 {
+				a = "0" + a
+			}
+		}
+		strval += a
+	}
+	return strval
+}
+
+func (h *hand) Score() string {
 	var flush bool
 	var straight bool
 	var unique bool
@@ -101,44 +121,67 @@ func (h *hand) Score() int {
 	unique = checkunique(h.Cards)
 	straight = checkstraight(h.Cards)
 	ranks, vals := checkranks(h.Cards)
-	fmt.Println("ranks:", ranks, vals)
+	sort.Sort(h)
+	s := make([]int, 15, 15)
+	s[14] = h.Cards[0].High
+	s[13] = h.Cards[1].High
+	s[12] = h.Cards[2].High
+	s[11] = h.Cards[3].High
+	s[10] = h.Cards[4].High
+
 	if straight && flush {
 		h.Name = "Straight Flush"
-		return StraightFlush
+		s[0] = 1
+		valint := getfinalscore(s)
+		return valint
 	}
 	if ranks == FullHouse {
 		h.Name = "Full House"
-		return FullHouse
+		s[2] = vals[0]
+		s[3] = vals[1]
+		valint := getfinalscore(s)
+		return valint
 	}
 	if flush {
 		h.Name = "Flush"
-		return Flush
+		s[4] = 1
+		valint := getfinalscore(s)
+		return valint
 	}
 	if straight {
 		h.Name = "Straight"
-		return Straight
+		s[5] = 1
+		valint := getfinalscore(s)
+		return valint
 	}
 	if ranks > 0 {
 		if ranks == FourofKind {
+			s[1] = vals[0]
 			h.Name = "Four of a Kind"
 		}
 		if ranks == ThreeOfKind {
+			s[6] = vals[0]
 			h.Name = "Three of a Kind"
 		}
 		if ranks == TwoPair {
+			s[7] = vals[0]
+			s[8] = vals[1]
 			h.Name = "Two Pair"
 		}
 		if ranks == Pair {
+			s[9] = vals[0]
 			h.Name = "Pair"
 		}
-		return ranks
+		valint := getfinalscore(s)
+		return valint
 	}
 
 	if !straight && !flush && unique {
 		h.Name = "High Card"
-		return HighCard
+		valint := getfinalscore(s)
+		return valint
 	}
-	return 0
+	return "0"
 }
 
 type rankResult struct {
@@ -320,7 +363,7 @@ func (h *hand) Less(i, j int) bool { return h.Cards[i].High < h.Cards[j].High }
 
 func (t *table) Len() int           { return len(t.Hands) }
 func (t *table) Swap(i, j int)      { t.Hands[i], t.Hands[j] = t.Hands[j], t.Hands[i] }
-func (t *table) Less(i, j int) bool { return t.Hands[i].Value < t.Hands[j].Value }
+func (t *table) Less(i, j int) bool { return t.Hands[i].Score() < t.Hands[j].Score() }
 
 func buildDeck() deck {
 	var d = deck{}
