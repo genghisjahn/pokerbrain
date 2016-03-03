@@ -52,37 +52,24 @@ type hand struct {
 func main() {
 	deck := buildDeck()
 	deck.Shuffle(5)
-	for h := 0; h < 200000; h++ {
-		hd1 := hand{}
-		hd2 := hand{}
-		hd3 := hand{}
-		deck = buildDeck()
-		deck.Shuffle(5)
-		for k := range hd1.Cards {
-			hd1.Cards[k] = deck.Deal()
-			hd2.Cards[k] = deck.Deal()
-			hd3.Cards[k] = deck.Deal()
-		}
-		hd1.Score()
-		hd2.Score()
-		hd3.Score()
-		if hd1.Name == "Pair" && hd2.Name == "Pair" && hd3.Name == "Pair" {
+	hands := make([]hand, 10, 10)
 
-			sort.Sort(sort.Reverse(&hd1))
-			sort.Sort(sort.Reverse(&hd2))
-			fmt.Println(hd1.Score(), hd1.Cards)
-			fmt.Println(hd2.Score(), hd2.Cards)
-			fmt.Println(hd3.Score(), hd3.Cards)
-			fmt.Println("-----")
-			t := table{}
-			t.Hands = append(t.Hands, hd1, hd2, hd3)
-
-			ch := compareHands(t)
-			fmt.Println("Compare:")
-			fmt.Println(ch)
-			break
+	deck = buildDeck()
+	deck.Shuffle(5)
+	for i, h := range hands {
+		for k := range h.Cards {
+			hands[i].Cards[k] = deck.Deal()
 		}
 	}
+	t := table{}
+	t.Hands = append(t.Hands, hands...)
+
+	ch := compareHands(t)
+	fmt.Println("Compare:")
+	for _, c := range ch {
+		fmt.Println(c)
+	}
+
 }
 
 func (d *deck) Deal() card {
