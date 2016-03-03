@@ -11,15 +11,15 @@ import (
 var suits = []string{"♤", "♡", "♢", "♧"}
 
 const (
-	HighCard      = 20000
-	Pair          = 40000
-	TwoPair       = 60000
-	ThreeOfKind   = 70000
-	Straight      = 80000
-	Flush         = 90000
-	FullHouse     = 100000
-	FourofKind    = 120000
-	StraightFlush = 140000
+	HighCard      = "High Card"
+	Pair          = "Pair"
+	TwoPair       = "Two Pair"
+	ThreeOfKind   = "Three of a Kind"
+	Straight      = "Straight"
+	Flush         = "Flush"
+	FullHouse     = "Full House"
+	FourofKind    = "Four of a Kind"
+	StraightFlush = "Straight Flush"
 	LOW           = false
 	HIGH          = true
 )
@@ -142,7 +142,7 @@ func (h *hand) Score() string {
 		valint := getfinalscore(s)
 		return valint
 	}
-	if ranks > 0 {
+	if ranks != "" {
 		if ranks == FourofKind {
 			s[1] = vals[0]
 			h.Name = "Four of a Kind"
@@ -176,7 +176,7 @@ type rankResult struct {
 	Values [15]byte
 }
 
-func checkranks(cards [5]card) (int, [2]int) {
+func checkranks(cards [5]card) (string, [2]int) {
 	c := make(map[int]int)
 	for _, v := range cards {
 		if _, ok := c[v.High]; ok {
@@ -262,7 +262,7 @@ func checkranks(cards [5]card) (int, [2]int) {
 		}
 		return Pair, vals
 	}
-	return 0, vals
+	return "", vals
 }
 
 func checkunique(cards [5]card) bool {
