@@ -61,6 +61,7 @@ func main() {
 			hands[i].Cards[k] = deck.Deal()
 		}
 	}
+
 	t := table{}
 	t.Hands = append(t.Hands, hands...)
 
@@ -339,6 +340,7 @@ func compareHands(t table) []hand {
 	winners := []hand{}
 	sort.Sort(sort.Reverse(&t))
 	for _, h := range t.Hands {
+		sort.Sort(sort.Reverse(&h))
 		winners = append(winners, h)
 	}
 	return winners
