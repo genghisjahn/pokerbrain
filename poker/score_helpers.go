@@ -1,9 +1,6 @@
 package poker
 
-import (
-	"fmt"
-	"strconv"
-)
+import "strconv"
 
 var suits = []string{"♤", "♡", "♢", "♧"}
 
@@ -195,7 +192,6 @@ func GetCardCombinations(cards []Card) []Hand {
 			}
 		}
 	}
-	fmt.Println("**", hands)
 	return hands
 }
 

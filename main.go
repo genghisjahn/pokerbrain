@@ -2,11 +2,20 @@ package main
 
 import (
 	"fmt"
+	"sort"
 
 	"github.com/genghisjahn/pokerbrain/poker"
 )
 
 var names = []string{"Adam", "Bill", "Charles", "David", "Edward", "Frank", "Greg", "Henry", "Ivan", "Jon"}
+
+type Combos struct {
+	Hands []poker.Hand
+}
+
+func (c *Combos) Len() int           { return len(c.Hands) }
+func (c *Combos) Swap(i, j int)      { c.Hands[i], c.Hands[j] = c.Hands[j], c.Hands[i] }
+func (c *Combos) Less(i, j int) bool { return c.Hands[i].Score() < c.Hands[j].Score() }
 
 func main() {
 	t := poker.Table{}
@@ -36,7 +45,10 @@ func main() {
 	fb = append(fb, t.Players[0].Pocket[0])
 	fb = append(fb, t.Players[0].Pocket[1])
 
-	poker.GetCardCombinations(fb)
+	hands := poker.GetCardCombinations(fb)
+	cbo := Combos{Hands: hands}
+	sort.Sort(sort.Reverse(&cbo))
+	fmt.Println("Best Hand:", cbo.Hands[0], cbo.Hands[0].Name, cbo.Hands[0].Score())
 
 	// for k, p := range t.Players {
 	// 	t.Players[k].SetBestHand(t.CommunityCards)
