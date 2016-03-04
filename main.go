@@ -24,15 +24,28 @@ func main() {
 	}
 	t.Players = append(t.Players, players...)
 	t.Flop()
+	t.Turn()
+	t.River()
 
-	for k, p := range t.Players {
-		t.Players[k].SetBestHand(t.CommunityCards)
-		fmt.Println(p.Name, p.Pocket)
+	fmt.Println("Table Cards:", t.CommunityCards)
+	fmt.Println("Pocket Cards:", t.Players[0].Pocket)
+	fb := []poker.Card{}
+	for _, c := range t.CommunityCards {
+		fb = append(fb, c)
 	}
-	fmt.Println(t.CommunityCards)
-	fmt.Println("----")
-	p := t.SortPlayerHands()
-	for _, i := range p {
-		fmt.Println(i)
-	}
+	fb = append(fb, t.Players[0].Pocket[0])
+	fb = append(fb, t.Players[0].Pocket[1])
+
+	poker.GetCardCombinations(fb)
+
+	// for k, p := range t.Players {
+	// 	t.Players[k].SetBestHand(t.CommunityCards)
+	// 	fmt.Println(p.Name, p.Pocket)
+	// }
+	// fmt.Println(t.CommunityCards)
+	// fmt.Println("----")
+	// p := t.SortPlayerHands()
+	// for _, i := range p {
+	// 	fmt.Println(i)
+	// }
 }

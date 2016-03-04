@@ -18,11 +18,11 @@ func (t *Table) Flop() {
 	}
 }
 
-func (t Table) Turn() {
+func (t *Table) Turn() {
 	t.CommunityCards[3] = t.Deal()
 }
 
-func (t Table) River() {
+func (t *Table) River() {
 	t.CommunityCards[4] = t.Deal()
 }
 

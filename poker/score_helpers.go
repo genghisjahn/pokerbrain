@@ -1,6 +1,9 @@
 package poker
 
-import "strconv"
+import (
+	"fmt"
+	"strconv"
+)
 
 var suits = []string{"♤", "♡", "♢", "♧"}
 
@@ -172,15 +175,27 @@ func getfinalscore(vals []int) string {
 	return strval
 }
 
-func getCardCombinations(cards []Card) []Hand {
+func GetCardCombinations(cards []Card) []Hand {
 	var hands = []Hand{}
-	pos := [5]int{}
-	_ = pos
 	length := len(cards)
-
-	for i := 0; i < length; i++ {
-
+	for a := 0; a < length-4; a++ {
+		for b := (a + 1); b < length-3; b++ {
+			for c := (b + 1); c < length-2; c++ {
+				for d := (c + 1); d < length-1; d++ {
+					for e := (d + 1); e < length; e++ {
+						h := Hand{}
+						h.Cards[0] = cards[a]
+						h.Cards[1] = cards[b]
+						h.Cards[2] = cards[c]
+						h.Cards[3] = cards[d]
+						h.Cards[4] = cards[e]
+						hands = append(hands, h)
+					}
+				}
+			}
+		}
 	}
+	fmt.Println("**", hands)
 	return hands
 }
 
