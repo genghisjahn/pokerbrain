@@ -25,8 +25,14 @@ func main() {
 	t.Players = append(t.Players, players...)
 	t.Flop()
 
-	for _, p := range t.Players {
+	for k, p := range t.Players {
+		t.Players[k].SetBestHand(t.CommunityCards)
 		fmt.Println(p.Name, p.Pocket)
 	}
 	fmt.Println(t.CommunityCards)
+	fmt.Println("----")
+	p := t.SortPlayerHands()
+	for _, i := range p {
+		fmt.Println(i)
+	}
 }

@@ -13,6 +13,9 @@ func (t *Table) Flop() {
 	t.CommunityCards[0] = t.Deal()
 	t.CommunityCards[1] = t.Deal()
 	t.CommunityCards[2] = t.Deal()
+	for _, p := range t.Players {
+		p.SetBestHand(t.CommunityCards)
+	}
 }
 
 func (t Table) Turn() {
@@ -23,10 +26,10 @@ func (t Table) River() {
 	t.CommunityCards[4] = t.Deal()
 }
 
-func (t Table) CompareHands() []Hand {
-	winners := []Hand{}
+func (t Table) SortPlayerHands() []Player {
+	winners := []Player{}
 	sort.Sort(sort.Reverse(&t))
-	for _, h := range t.Hands {
+	for _, h := range t.Players {
 		sort.Sort(sort.Reverse(&h))
 		winners = append(winners, h)
 	}
