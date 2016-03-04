@@ -1,6 +1,9 @@
 package poker
 
-import "sort"
+import (
+	"fmt"
+	"sort"
+)
 
 type Hand struct {
 	Cards [5]Card
@@ -9,6 +12,10 @@ type Hand struct {
 
 type Pocket struct {
 	Cards [2]Card
+}
+
+func (p Pocket) String() string {
+	return fmt.Sprintf("%s,%s", p.Cards[0], p.Cards[1])
 }
 
 func (h *Hand) Len() int           { return len(h.Cards) }
