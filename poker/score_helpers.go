@@ -55,13 +55,6 @@ func checkranks(cards [5]Card) (string, [2]int) {
 		c[v.High] = 1
 	}
 
-	var kickers = []Card{}
-	for _, v := range cards {
-		if c[v.High] == 1 {
-			kickers = append(kickers, v)
-		}
-	}
-
 	var onepair bool
 	var twopair bool
 	var threekind bool
