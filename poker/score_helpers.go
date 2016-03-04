@@ -171,3 +171,26 @@ func getfinalscore(vals []int) string {
 	}
 	return strval
 }
+
+func getCardCombinations(cards []Card) []Hand {
+	var hands = []Hand{}
+
+	return hands
+}
+
+/*
+void print_combinations(const char *string)
+{
+    int i, j, k;
+    int len = strlen(string);
+
+    for (i = 0; i < len - 2; i++)
+    {
+        for (j = i + 1; j < len - 1; j++)
+        {
+            for (k = j + 1; k < len; k++)
+                printf("%c%c%c\n", string[i], string[j], string[k]);
+        }
+    }
+}
+*/
