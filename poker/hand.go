@@ -1,15 +1,30 @@
 package poker
 
-import "sort"
+import (
+	"fmt"
+	"sort"
+)
 
 type Hand struct {
 	Cards [5]Card
 	Name  string
 }
 
+type Pocket struct {
+	Cards [2]Card
+}
+
+func (p Pocket) String() string {
+	return fmt.Sprintf("%s,%s", p.Cards[0], p.Cards[1])
+}
+
 func (h *Hand) Len() int           { return len(h.Cards) }
 func (h *Hand) Swap(i, j int)      { h.Cards[i], h.Cards[j] = h.Cards[j], h.Cards[i] }
 func (h *Hand) Less(i, j int) bool { return h.Cards[i].High < h.Cards[j].High }
+
+func (p *Pocket) Len() int           { return len(p.Cards) }
+func (p *Pocket) Swap(i, j int)      { p.Cards[i], p.Cards[j] = p.Cards[j], p.Cards[i] }
+func (p *Pocket) Less(i, j int) bool { return p.Cards[i].High < p.Cards[j].High }
 
 func (h *Hand) Score() string {
 	var flush bool
