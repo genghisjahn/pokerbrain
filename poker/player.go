@@ -7,3 +7,9 @@ type Player struct {
 	Stake    float64
 	Pocket   [2]Card
 }
+
+func (p *Player) BestHand(cc []Card) Hand {
+	h := Hand{}
+
+	return h
+}
