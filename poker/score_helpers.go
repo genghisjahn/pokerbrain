@@ -174,7 +174,13 @@ func getfinalscore(vals []int) string {
 
 func getCardCombinations(cards []Card) []Hand {
 	var hands = []Hand{}
+	pos := [5]int{}
+	_ = pos
+	length := len(cards)
 
+	for i := 0; i < length; i++ {
+
+	}
 	return hands
 }
 
