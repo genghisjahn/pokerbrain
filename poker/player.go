@@ -8,7 +8,7 @@ type Player struct {
 	Pocket   [2]Card
 }
 
-func (p *Player) SetBestHand(cc [5]Card) {
+func (p *Player) SetBestHand(cc []Card) {
 	h := Hand{}
 	//Right now, just test a flop, 3 community cards
 	h.Cards[0] = p.Pocket[0]

@@ -3,13 +3,14 @@ package poker
 import "sort"
 
 type Table struct {
-	CommunityCards [5]Card
+	CommunityCards []Card
 	Hands          []Hand
 	Players        []Player
 	Deck
 }
 
 func (t *Table) Flop() {
+	t.CommunityCards = make([]Card, 5, 5)
 	t.CommunityCards[0] = t.Deal()
 	t.CommunityCards[1] = t.Deal()
 	t.CommunityCards[2] = t.Deal()

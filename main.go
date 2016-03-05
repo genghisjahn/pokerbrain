@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"sort"
 
 	"github.com/genghisjahn/pokerbrain/poker"
 )
@@ -37,27 +36,28 @@ func main() {
 	t.River()
 
 	fmt.Println("Table Cards:", t.CommunityCards)
-	fmt.Println("Pocket Cards:", t.Players[0].Pocket)
-	fb := []poker.Card{}
-	for _, c := range t.CommunityCards {
-		fb = append(fb, c)
+	//fmt.Println("Pocket Cards:", t.Players[0].Pocket)
+
+	// fb := []poker.Card{}
+	// for _, c := range t.CommunityCards {
+	// 	fb = append(fb, c)
+	// }
+	// fb = append(fb, t.Players[0].Pocket[0])
+	// fb = append(fb, t.Players[0].Pocket[1])
+	//
+	// hands := poker.GetCardCombinations(fb)
+	// cbo := Combos{Hands: hands}
+	// sort.Sort(sort.Reverse(&cbo))
+	// fmt.Println("Best Hand:", cbo.Hands[0], cbo.Hands[0].Name, cbo.Hands[0].Score())
+
+	for k, p := range t.Players {
+		t.Players[k].SetBestHand(t.CommunityCards)
+		fmt.Println(p.Name, p.Pocket)
 	}
-	fb = append(fb, t.Players[0].Pocket[0])
-	fb = append(fb, t.Players[0].Pocket[1])
-
-	hands := poker.GetCardCombinations(fb)
-	cbo := Combos{Hands: hands}
-	sort.Sort(sort.Reverse(&cbo))
-	fmt.Println("Best Hand:", cbo.Hands[0], cbo.Hands[0].Name, cbo.Hands[0].Score())
-
-	// for k, p := range t.Players {
-	// 	t.Players[k].SetBestHand(t.CommunityCards)
-	// 	fmt.Println(p.Name, p.Pocket)
-	// }
-	// fmt.Println(t.CommunityCards)
-	// fmt.Println("----")
-	// p := t.SortPlayerHands()
-	// for _, i := range p {
-	// 	fmt.Println(i)
-	// }
+	fmt.Println(t.CommunityCards)
+	fmt.Println("----")
+	p := t.SortPlayerHands()
+	for _, i := range p {
+		fmt.Println(i)
+	}
 }
