@@ -68,5 +68,23 @@ func main() {
 	fmt.Println("----")
 	fmt.Println("Turn:", t.CommunityCards)
 	fmt.Println("----")
-	//t.River()
+	for k, _ := range t.Players {
+		t.Players[k].SetBestHand(t.CommunityCards)
+	}
+	p = t.SortPlayerHands()
+	for _, i := range p {
+		fmt.Println(i)
+	}
+	fmt.Scanln(&response)
+	t.River()
+	fmt.Println("----")
+	fmt.Println("River:", t.CommunityCards)
+	fmt.Println("----")
+	for k, _ := range t.Players {
+		t.Players[k].SetBestHand(t.CommunityCards)
+	}
+	p = t.SortPlayerHands()
+	for _, i := range p {
+		fmt.Println(i)
+	}
 }

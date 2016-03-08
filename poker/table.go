@@ -10,7 +10,7 @@ type Table struct {
 }
 
 func (t *Table) Flop() {
-	t.CommunityCards = make([]Card, 5, 5)
+	t.CommunityCards = make([]Card, 3, 5)
 	t.CommunityCards[0] = t.Deal()
 	t.CommunityCards[1] = t.Deal()
 	t.CommunityCards[2] = t.Deal()
@@ -20,11 +20,16 @@ func (t *Table) Flop() {
 }
 
 func (t *Table) Turn() {
-	t.CommunityCards[3] = t.Deal()
+	t.CommunityCards = append(t.CommunityCards, t.Deal())
+	for _, p := range t.Players {
+		p.SetBestHand(t.CommunityCards)
+	}
+	//t.CommunityCards[3] = t.Deal()
 }
 
 func (t *Table) River() {
-	t.CommunityCards[4] = t.Deal()
+	t.CommunityCards = append(t.CommunityCards, t.Deal())
+	// t.CommunityCards[4] = t.Deal()
 }
 
 func (t Table) SortPlayerHands() []Player {

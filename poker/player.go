@@ -1,5 +1,7 @@
 package poker
 
+import "sort"
+
 type Player struct {
 	Name string
 	Hand
@@ -8,16 +10,24 @@ type Player struct {
 	Pocket   [2]Card
 }
 
+type Combos struct {
+	Hands []Hand
+}
+
+func (c *Combos) Len() int           { return len(c.Hands) }
+func (c *Combos) Swap(i, j int)      { c.Hands[i], c.Hands[j] = c.Hands[j], c.Hands[i] }
+func (c *Combos) Less(i, j int) bool { return c.Hands[i].Score() < c.Hands[j].Score() }
+
 func (p *Player) SetBestHand(cc []Card) {
-	h := Hand{}
-	//Right now, just test a flop, 3 community cards
-	h.Cards[0] = p.Pocket[0]
-	h.Cards[1] = p.Pocket[1]
-	// for k, v := range cc {
-	// 	h.Cards[k+2] == v
-	// }
-	h.Cards[2] = cc[0]
-	h.Cards[3] = cc[1]
-	h.Cards[4] = cc[2]
-	p.Hand = h
+	fb := []Card{}
+	for _, c := range cc {
+		fb = append(fb, c)
+	}
+	fb = append(fb, p.Pocket[0])
+	fb = append(fb, p.Pocket[1])
+	hands := GetCardCombinations(fb)
+	cbo := Combos{Hands: hands}
+	sort.Sort(sort.Reverse(&cbo)) //GetCardCombinations(cards []Card)
+	p.Hand = cbo.Hands[0]
+
 }
