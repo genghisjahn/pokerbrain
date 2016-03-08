@@ -35,8 +35,8 @@ func TestScoreHandTwoPair(t *testing.T) {
 	if h.Name != "Two Pair" {
 		t.Errorf("Expected Two Pair, got %s\n", h.Name)
 	}
-	if h.Score != "000000000000808001414080802" {
-		t.Errorf("Expected 000000000000808001414080802, got %s\n", h.Score)
+	if h.Score != "000000000001408001414080802" {
+		t.Errorf("Expected 000000000001408001414080802, got %s\n", h.Score)
 	}
 }
 
