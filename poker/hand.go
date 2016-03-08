@@ -27,7 +27,7 @@ func (p *Pocket) Len() int           { return len(p.Cards) }
 func (p *Pocket) Swap(i, j int)      { p.Cards[i], p.Cards[j] = p.Cards[j], p.Cards[i] }
 func (p *Pocket) Less(i, j int) bool { return p.Cards[i].High < p.Cards[j].High }
 
-func (h *Hand) SetScore() string {
+func (h *Hand) SetScore() {
 	var flush bool
 	var straight bool
 	var unique bool
@@ -54,7 +54,7 @@ func (h *Hand) SetScore() string {
 		s[0] = 1
 		valint := getfinalscore(s)
 		h.Score = valint
-		return valint
+		return
 	}
 	if ranks == FullHouse {
 		h.Name = "Full House"
@@ -62,22 +62,21 @@ func (h *Hand) SetScore() string {
 		s[3] = vals[1]
 		valint := getfinalscore(s)
 		h.Score = valint
-
-		return valint
+		return
 	}
 	if flush {
 		h.Name = "Flush"
 		s[4] = 1
 		valint := getfinalscore(s)
 		h.Score = valint
-		return valint
+		return
 	}
 	if straight {
 		h.Name = "Straight"
 		s[5] = 1
 		valint := getfinalscore(s)
 		h.Score = valint
-		return valint
+		return
 	}
 	if ranks != "" {
 		if ranks == FourofKind {
@@ -99,14 +98,14 @@ func (h *Hand) SetScore() string {
 		}
 		valint := getfinalscore(s)
 		h.Score = valint
-		return valint
+		return
 	}
 
 	if !straight && !flush && unique {
 		h.Name = "High Card"
 		valint := getfinalscore(s)
 		h.Score = valint
-		return valint
+		return
 	}
 	panic("This should never happen")
 }
