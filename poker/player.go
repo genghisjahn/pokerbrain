@@ -16,7 +16,7 @@ type Combos struct {
 
 func (c *Combos) Len() int           { return len(c.Hands) }
 func (c *Combos) Swap(i, j int)      { c.Hands[i], c.Hands[j] = c.Hands[j], c.Hands[i] }
-func (c *Combos) Less(i, j int) bool { return c.Hands[i].Score() < c.Hands[j].Score() }
+func (c *Combos) Less(i, j int) bool { return c.Hands[i].SetScore() < c.Hands[j].SetScore() }
 
 func (p *Player) SetBestHand(cc []Card) {
 	fb := []Card{}

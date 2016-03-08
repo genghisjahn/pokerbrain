@@ -26,7 +26,7 @@ func (p *Pocket) Len() int           { return len(p.Cards) }
 func (p *Pocket) Swap(i, j int)      { p.Cards[i], p.Cards[j] = p.Cards[j], p.Cards[i] }
 func (p *Pocket) Less(i, j int) bool { return p.Cards[i].High < p.Cards[j].High }
 
-func (h *Hand) Score() string {
+func (h *Hand) SetScore() string {
 	var flush bool
 	var straight bool
 	var unique bool
