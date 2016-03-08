@@ -8,14 +8,6 @@ import (
 
 var names = []string{"Adam", "Bill", "Charles", "David", "Edward", "Frank", "Greg", "Henry", "Ivan", "Jon"}
 
-type Combos struct {
-	Hands []poker.Hand
-}
-
-func (c *Combos) Len() int           { return len(c.Hands) }
-func (c *Combos) Swap(i, j int)      { c.Hands[i], c.Hands[j] = c.Hands[j], c.Hands[i] }
-func (c *Combos) Less(i, j int) bool { return c.Hands[i].SetScore() < c.Hands[j].SetScore() }
-
 func main() {
 	for {
 
