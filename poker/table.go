@@ -38,4 +38,4 @@ func (t Table) SortPlayerHands() []Player {
 
 func (t *Table) Len() int           { return len(t.Players) }
 func (t *Table) Swap(i, j int)      { t.Players[i], t.Players[j] = t.Players[j], t.Players[i] }
-func (t *Table) Less(i, j int) bool { return t.Players[i].Hand.Score() < t.Players[j].Hand.Score() }
+func (t *Table) Less(i, j int) bool { return t.Players[i].Hand.Score < t.Players[j].Hand.Score }
