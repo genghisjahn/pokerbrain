@@ -13,6 +13,9 @@ func (p *Player) SetBestHand(cc []Card) {
 	//Right now, just test a flop, 3 community cards
 	h.Cards[0] = p.Pocket[0]
 	h.Cards[1] = p.Pocket[1]
+	// for k, v := range cc {
+	// 	h.Cards[k+2] == v
+	// }
 	h.Cards[2] = cc[0]
 	h.Cards[3] = cc[1]
 	h.Cards[4] = cc[2]

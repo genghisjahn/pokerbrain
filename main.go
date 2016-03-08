@@ -32,8 +32,6 @@ func main() {
 	}
 	t.Players = append(t.Players, players...)
 	t.Flop()
-	t.Turn()
-	t.River()
 
 	fmt.Println("Table Cards:", t.CommunityCards)
 	//fmt.Println("Pocket Cards:", t.Players[0].Pocket)
@@ -60,4 +58,7 @@ func main() {
 	for _, i := range p {
 		fmt.Println(i)
 	}
+
+	//t.Turn()
+	//t.River()
 }
