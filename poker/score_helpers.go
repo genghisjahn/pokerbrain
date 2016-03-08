@@ -180,3 +180,26 @@ func getfinalscore(vals []int) string {
 	}
 	return strval
 }
+
+func GetCardCombinations(cards []Card) []Hand {
+	var hands = []Hand{}
+	length := len(cards)
+	for a := 0; a < length-4; a++ {
+		for b := (a + 1); b < length-3; b++ {
+			for c := (b + 1); c < length-2; c++ {
+				for d := (c + 1); d < length-1; d++ {
+					for e := (d + 1); e < length; e++ {
+						h := Hand{}
+						h.Cards[0] = cards[a]
+						h.Cards[1] = cards[b]
+						h.Cards[2] = cards[c]
+						h.Cards[3] = cards[d]
+						h.Cards[4] = cards[e]
+						hands = append(hands, h)
+					}
+				}
+			}
+		}
+	}
+	return hands
+}
