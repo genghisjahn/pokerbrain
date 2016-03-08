@@ -8,6 +8,7 @@ import (
 type Hand struct {
 	Cards [5]Card
 	Name  string
+	Score string
 }
 
 type Pocket struct {
@@ -52,6 +53,7 @@ func (h *Hand) SetScore() string {
 		h.Name = "Straight Flush"
 		s[0] = 1
 		valint := getfinalscore(s)
+		h.Score = valint
 		return valint
 	}
 	if ranks == FullHouse {
@@ -59,18 +61,22 @@ func (h *Hand) SetScore() string {
 		s[2] = vals[0]
 		s[3] = vals[1]
 		valint := getfinalscore(s)
+		h.Score = valint
+
 		return valint
 	}
 	if flush {
 		h.Name = "Flush"
 		s[4] = 1
 		valint := getfinalscore(s)
+		h.Score = valint
 		return valint
 	}
 	if straight {
 		h.Name = "Straight"
 		s[5] = 1
 		valint := getfinalscore(s)
+		h.Score = valint
 		return valint
 	}
 	if ranks != "" {
@@ -92,13 +98,15 @@ func (h *Hand) SetScore() string {
 			h.Name = "Pair"
 		}
 		valint := getfinalscore(s)
+		h.Score = valint
 		return valint
 	}
 
 	if !straight && !flush && unique {
 		h.Name = "High Card"
 		valint := getfinalscore(s)
+		h.Score = valint
 		return valint
 	}
-	return "0"
+	panic("This should never happen")
 }

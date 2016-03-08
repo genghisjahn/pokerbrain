@@ -103,12 +103,15 @@ func checkranks(cards [5]Card) (string, [2]int) {
 		return ThreeOfKind, vals
 	}
 	if twopair {
+		var firstset = false
 		for k, c1 := range c {
 			if c1 == 2 {
-				vals[0] = k
-			}
-			if c1 == 2 {
-				vals[1] = k
+				if !firstset {
+					vals[0] = k
+					firstset = true
+				} else {
+					vals[1] = k
+				}
 			}
 		}
 		if vals[1] > vals[0] {

@@ -72,7 +72,7 @@ func main() {
 		for _, i := range p {
 			fmt.Println(i)
 		}
-		if p[0].Hand.Name == "Flush" {
+		if p[0].Hand.Name == "Two Pair" {
 			break
 		}
 	}
