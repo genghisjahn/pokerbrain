@@ -24,12 +24,10 @@ func (t *Table) Turn() {
 	for _, p := range t.Players {
 		p.SetBestHand(t.CommunityCards)
 	}
-	//t.CommunityCards[3] = t.Deal()
 }
 
 func (t *Table) River() {
 	t.CommunityCards = append(t.CommunityCards, t.Deal())
-	// t.CommunityCards[4] = t.Deal()
 }
 
 func scoreAllHands(t *Table) {

@@ -33,7 +33,7 @@ func main() {
 		}
 		p := t.SortPlayerHands()
 		t.Turn()
-		for k, _ := range t.Players {
+		for k := range t.Players {
 			t.Players[k].SetBestHand(t.CommunityCards)
 		}
 		p = t.SortPlayerHands()
@@ -41,14 +41,14 @@ func main() {
 		fmt.Println("----")
 		fmt.Println("River:", t.CommunityCards)
 		fmt.Println("----")
-		for k, _ := range t.Players {
+		for k := range t.Players {
 			t.Players[k].SetBestHand(t.CommunityCards)
 		}
 		p = t.SortPlayerHands()
 		for _, i := range p {
 			fmt.Println(i)
 		}
-		if p[0].Hand.Name == "Two Pair" {
+		if p[0].Hand.Name == "Four of a Kind" {
 			break
 		}
 	}
