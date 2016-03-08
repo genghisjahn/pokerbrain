@@ -32,7 +32,14 @@ func (t *Table) River() {
 	// t.CommunityCards[4] = t.Deal()
 }
 
+func scoreAllHands(t *Table) {
+	for _, v := range t.Players {
+		v.Hand.SetScore()
+	}
+}
+
 func (t Table) SortPlayerHands() []Player {
+	scoreAllHands(&t)
 	winners := []Player{}
 	sort.Sort(sort.Reverse(&t))
 	for _, h := range t.Players {
@@ -45,5 +52,5 @@ func (t Table) SortPlayerHands() []Player {
 func (t *Table) Len() int      { return len(t.Players) }
 func (t *Table) Swap(i, j int) { t.Players[i], t.Players[j] = t.Players[j], t.Players[i] }
 func (t *Table) Less(i, j int) bool {
-	return t.Players[i].Hand.SetScore() < t.Players[j].Hand.SetScore()
+	return t.Players[i].Hand.Score < t.Players[j].Hand.Score
 }
