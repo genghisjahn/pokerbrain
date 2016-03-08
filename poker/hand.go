@@ -8,6 +8,7 @@ import (
 type Hand struct {
 	Cards [5]Card
 	Name  string
+	Score string
 }
 
 type Pocket struct {
@@ -26,7 +27,7 @@ func (p *Pocket) Len() int           { return len(p.Cards) }
 func (p *Pocket) Swap(i, j int)      { p.Cards[i], p.Cards[j] = p.Cards[j], p.Cards[i] }
 func (p *Pocket) Less(i, j int) bool { return p.Cards[i].High < p.Cards[j].High }
 
-func (h *Hand) SetScore() string {
+func (h *Hand) SetScore() {
 	var flush bool
 	var straight bool
 	var unique bool
@@ -52,26 +53,31 @@ func (h *Hand) SetScore() string {
 		h.Name = "Straight Flush"
 		s[0] = 1
 		valint := getfinalscore(s)
-		return valint
+		h.Score = valint
+		return
+		//return valint
 	}
 	if ranks == FullHouse {
 		h.Name = "Full House"
 		s[2] = vals[0]
 		s[3] = vals[1]
 		valint := getfinalscore(s)
-		return valint
+		h.Score = valint
+		return
 	}
 	if flush {
 		h.Name = "Flush"
 		s[4] = 1
 		valint := getfinalscore(s)
-		return valint
+		h.Score = valint
+		return
 	}
 	if straight {
 		h.Name = "Straight"
 		s[5] = 1
 		valint := getfinalscore(s)
-		return valint
+		h.Score = valint
+		return
 	}
 	if ranks != "" {
 		if ranks == FourofKind {
@@ -92,13 +98,16 @@ func (h *Hand) SetScore() string {
 			h.Name = "Pair"
 		}
 		valint := getfinalscore(s)
-		return valint
+		h.Score = valint
+		return
 	}
 
 	if !straight && !flush && unique {
 		h.Name = "High Card"
 		valint := getfinalscore(s)
-		return valint
+		h.Score = valint
+		return
 	}
-	return "0"
+	h.Score = "0"
+	//return "0"
 }
