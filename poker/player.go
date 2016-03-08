@@ -33,9 +33,9 @@ func (p *Player) SetBestHand(cc []Card) {
 	cbo := Combos{Hands: hands}
 	for _, h := range cbo.Hands {
 		h.SetScore()
-		fmt.Println(h.Score)
+		//	fmt.Println(h.Score)
 	}
 	sort.Sort(sort.Reverse(&cbo)) //GetCardCombinations(cards []Card)
 	p.Hand = cbo.Hands[0]
-
+	fmt.Println(p.Name, p.Hand)
 }
