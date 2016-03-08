@@ -33,22 +33,7 @@ func main() {
 	}
 	t.Players = append(t.Players, players...)
 
-	//fmt.Println("Pocket Cards:", t.Players[0].Pocket)
-
-	// fb := []poker.Card{}
-	// for _, c := range t.CommunityCards {
-	// 	fb = append(fb, c)
-	// }
-	// fb = append(fb, t.Players[0].Pocket[0])
-	// fb = append(fb, t.Players[0].Pocket[1])
-	//
-	// hands := poker.GetCardCombinations(fb)
-	// cbo := Combos{Hands: hands}
-	// sort.Sort(sort.Reverse(&cbo))
-	// fmt.Println("Best Hand:", cbo.Hands[0], cbo.Hands[0].Name, cbo.Hands[0].Score())
-
 	for _, p := range t.Players {
-		//t.Players[k].SetBestHand(t.CommunityCards)
 		fmt.Println(p.Name, p.Pocket)
 	}
 	fmt.Scanln(&response)
