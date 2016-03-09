@@ -48,7 +48,7 @@ func Demotable() {
 		for _, i := range p {
 			fmt.Println(i)
 		}
-		if p[0].Hand.Name == "Four of a Kind" {
+		if p[0].Hand.Name == "Pair" {
 			break
 		}
 	}

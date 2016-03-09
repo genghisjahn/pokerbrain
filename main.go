@@ -1,10 +1,13 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"strings"
+
+	"github.com/genghisjahn/pokerbrain/poker"
 )
 
 func main() {
@@ -16,9 +19,14 @@ func main() {
 
 func scoreHandler(w http.ResponseWriter, r *http.Request) {
 	// http://localhost:8080/hand?h=h14|s14|s10|c8|d4
+	poker.BuildDeck()
+	hand := poker.Hand{}
 	vals := strings.Split(r.FormValue("h"), "|")
-	for _, v := range vals {
-		fmt.Println(v)
+	for k, v := range vals[:5] {
+		hand.Cards[k] = poker.DeckCardMap[v]
 	}
+	hand.SetScore()
+	jdata, _ := json.Marshal(hand)
+	fmt.Println(string(jdata))
 	http.Error(w, "Not Implemented.", http.StatusInternalServerError)
 }
