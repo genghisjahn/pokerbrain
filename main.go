@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -17,7 +18,11 @@ func main() {
 }
 
 func scoreHandler(w http.ResponseWriter, r *http.Request) {
-	// http://localhost:8080/hand?h=h14|s14|s10|c8|d4
+	method := r.Method
+	if method != "GET" {
+		http.Error(w, fmt.Sprintf("%s not allowed", method), http.StatusMethodNotAllowed)
+		return
+	}
 	poker.BuildDeck()
 	hand := poker.Hand{}
 	vals := strings.Split(r.FormValue("h"), "|")
