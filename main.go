@@ -12,12 +12,12 @@ import (
 
 func main() {
 	log.Println("Started")
-	http.HandleFunc("hand/score", handscoreHandler)
-	http.HandleFunc("table/score", tableScoreHandler)
+	http.HandleFunc("/hand/score", handscoreHandler)
+	http.HandleFunc("/players/score", playersScoreHandler)
 	log.Fatal(http.ListenAndServe("localhost:8080", nil))
 }
 
-func tableScoreHandler(w http.ResponseWriter, r *http.Request) {
+func playersScoreHandler(w http.ResponseWriter, r *http.Request) {
 	method := r.Method
 	if method != "POST" {
 		http.Error(w, fmt.Sprintf("%s not allowed", method), http.StatusMethodNotAllowed)
