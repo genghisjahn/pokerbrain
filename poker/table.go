@@ -3,10 +3,9 @@ package poker
 import "sort"
 
 type Table struct {
-	CommunityCards []Card
-	Hands          []Hand
-	Players        []Player
-	Deck
+	CommunityCards []Card   `json:"community_cards"`
+	Players        []Player `json:"players"`
+	Deck           `json:"deck"`
 }
 
 func (t *Table) Flop() {

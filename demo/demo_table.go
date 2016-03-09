@@ -26,6 +26,7 @@ func Demotable() {
 			newPlayer.Pocket[1] = t.Deck.Deal()
 			players = append(players, newPlayer)
 		}
+
 		t.Players = append(t.Players, players...)
 		t.Flop()
 		for k := range t.Players {
@@ -48,7 +49,7 @@ func Demotable() {
 		for _, i := range p {
 			fmt.Println(i)
 		}
-		if p[0].Hand.Name == "Pair" {
+		if p[0].Hand.Name == "Flush" {
 			break
 		}
 	}
