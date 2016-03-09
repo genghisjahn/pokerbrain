@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -27,6 +26,6 @@ func scoreHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	hand.SetScore()
 	jdata, _ := json.Marshal(hand)
-	fmt.Println(string(jdata))
-	http.Error(w, "Not Implemented.", http.StatusInternalServerError)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jdata)
 }
