@@ -19,6 +19,14 @@ func main() {
 
 func playersScoreHandler(w http.ResponseWriter, r *http.Request) {
 	//Build an anonymous struct here
+
+	player := []struct {
+		Name string
+		Hand []poker.Card
+	}{}
+
+	players := player
+
 	method := r.Method
 	if method != "POST" {
 		http.Error(w, fmt.Sprintf("%s not allowed", method), http.StatusMethodNotAllowed)
@@ -26,22 +34,26 @@ func playersScoreHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	poker.BuildDeck()
 	decoder := json.NewDecoder(r.Body)
-	var p []poker.Player
-	err := decoder.Decode(&p)
+
+	err := decoder.Decode(&players)
 	if err != nil {
 		panic(err)
 	}
-	log.Println("***", p[0].Hand)
-	for k := range p {
+	log.Println("***", players[0].Hand)
+	for k := range players {
 		_ = k
 		//p[k].Hand = p.Cards
 	}
 	t := poker.Table{}
-	p = t.SortPlayerHands()
-	for _, i := range p {
+	for _, p := range players {
+		_ = p
+		// temp := poker.Player{Name: p.Name, Hand: p.Hand}
+		// t.Players = append{t.Players}
+	}
+	pplayers := t.SortPlayerHands()
+	for _, i := range pplayers {
 		fmt.Println(i)
 	}
-	log.Println(p)
 }
 
 func handscoreHandler(w http.ResponseWriter, r *http.Request) {
