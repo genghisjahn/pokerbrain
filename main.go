@@ -18,6 +18,7 @@ func main() {
 }
 
 func playersScoreHandler(w http.ResponseWriter, r *http.Request) {
+	//Build an anonymous struct here
 	method := r.Method
 	if method != "POST" {
 		http.Error(w, fmt.Sprintf("%s not allowed", method), http.StatusMethodNotAllowed)
@@ -29,6 +30,16 @@ func playersScoreHandler(w http.ResponseWriter, r *http.Request) {
 	err := decoder.Decode(&p)
 	if err != nil {
 		panic(err)
+	}
+	log.Println("***", p[0].Hand)
+	for k := range p {
+		_ = k
+		//p[k].Hand = p.Cards
+	}
+	t := poker.Table{}
+	p = t.SortPlayerHands()
+	for _, i := range p {
+		fmt.Println(i)
 	}
 	log.Println(p)
 }
@@ -56,7 +67,7 @@ func handscoreHandler(w http.ResponseWriter, r *http.Request) {
 [
    {
       "Name":"Bill",
-      "Cards":[
+      "Hand":[
          {
             "suit":"♧",
             "Name":"3"
@@ -76,25 +87,12 @@ func handscoreHandler(w http.ResponseWriter, r *http.Request) {
          {
             "suit":"♧",
             "Name":"A"
-         }
-      ],
-      "Score":"000000010000000001408070603",
-      "Position":2,
-      "Stake":100,
-      "Pocket":[
-         {
-            "suit":"♧",
-            "Name":"7"
-         },
-         {
-            "suit":"♧",
-            "Name":"3"
          }
       ]
    },
    {
       "Name":"Frank",
-      "Cards":[
+      "Hand":[
          {
             "suit":"♧",
             "Name":"6"
@@ -114,25 +112,12 @@ func handscoreHandler(w http.ResponseWriter, r *http.Request) {
          {
             "suit":"♤",
             "Name":"A"
-         }
-      ],
-      "Score":"000000000001406001414100606",
-      "Position":6,
-      "Stake":100,
-      "Pocket":[
-         {
-            "suit":"♤",
-            "Name":"A"
-         },
-         {
-            "suit":"♤",
-            "Name":"6"
          }
       ]
    },
    {
       "Name":"David",
-      "Cards":[
+      "Hand":[
          {
             "suit":"♤",
             "Name":"7"
@@ -152,25 +137,12 @@ func handscoreHandler(w http.ResponseWriter, r *http.Request) {
          {
             "suit":"♧",
             "Name":"A"
-         }
-      ],
-      "Score":"000000000001007001410100707",
-      "Position":4,
-      "Stake":100,
-      "Pocket":[
-         {
-            "suit":"♢",
-            "Name":"7"
-         },
-         {
-            "suit":"♡",
-            "Name":"10"
          }
       ]
    },
    {
       "Name":"Edward",
-      "Cards":[
+      "Hand":[
          {
             "suit":"♤",
             "Name":"7"
@@ -190,25 +162,12 @@ func handscoreHandler(w http.ResponseWriter, r *http.Request) {
          {
             "suit":"♧",
             "Name":"A"
-         }
-      ],
-      "Score":"000000000000807001408080707",
-      "Position":5,
-      "Stake":100,
-      "Pocket":[
-         {
-            "suit":"♤",
-            "Name":"8"
-         },
-         {
-            "suit":"♡",
-            "Name":"7"
          }
       ]
    },
    {
       "Name":"Jon",
-      "Cards":[
+      "Hand":[
          {
             "suit":"♤",
             "Name":"7"
@@ -228,25 +187,12 @@ func handscoreHandler(w http.ResponseWriter, r *http.Request) {
          {
             "suit":"♡",
             "Name":"A"
-         }
-      ],
-      "Score":"000000000000000141414100807",
-      "Position":10,
-      "Stake":100,
-      "Pocket":[
-         {
-            "suit":"♡",
-            "Name":"A"
-         },
-         {
-            "suit":"♤",
-            "Name":"4"
          }
       ]
    },
    {
       "Name":"Ivan",
-      "Cards":[
+      "Hand":[
          {
             "suit":"♤",
             "Name":"7"
@@ -266,25 +212,12 @@ func handscoreHandler(w http.ResponseWriter, r *http.Request) {
          {
             "suit":"♧",
             "Name":"A"
-         }
-      ],
-      "Score":"000000000000000101410100807",
-      "Position":9,
-      "Stake":100,
-      "Pocket":[
-         {
-            "suit":"♢",
-            "Name":"3"
-         },
-         {
-            "suit":"♤",
-            "Name":"10"
          }
       ]
    },
    {
       "Name":"Greg",
-      "Cards":[
+      "Hand":[
          {
             "suit":"♧",
             "Name":"8"
@@ -304,25 +237,12 @@ func handscoreHandler(w http.ResponseWriter, r *http.Request) {
          {
             "suit":"♧",
             "Name":"A"
-         }
-      ],
-      "Score":"000000000000000081411100808",
-      "Position":7,
-      "Stake":100,
-      "Pocket":[
-         {
-            "suit":"♡",
-            "Name":"8"
-         },
-         {
-            "suit":"♤",
-            "Name":"J"
          }
       ]
    },
    {
       "Name":"Charles",
-      "Cards":[
+      "Hand":[
          {
             "suit":"♧",
             "Name":"8"
@@ -342,25 +262,12 @@ func handscoreHandler(w http.ResponseWriter, r *http.Request) {
          {
             "suit":"♧",
             "Name":"A"
-         }
-      ],
-      "Score":"000000000000000001413121008",
-      "Position":3,
-      "Stake":100,
-      "Pocket":[
-         {
-            "suit":"♤",
-            "Name":"Q"
-         },
-         {
-            "suit":"♢",
-            "Name":"K"
          }
       ]
    },
    {
       "Name":"Henry",
-      "Cards":[
+      "Hand":[
          {
             "suit":"♤",
             "Name":"7"
@@ -380,25 +287,12 @@ func handscoreHandler(w http.ResponseWriter, r *http.Request) {
          {
             "suit":"♧",
             "Name":"A"
-         }
-      ],
-      "Score":"000000000000000001413100807",
-      "Position":8,
-      "Stake":100,
-      "Pocket":[
-         {
-            "suit":"♢",
-            "Name":"5"
-         },
-         {
-            "suit":"♧",
-            "Name":"K"
          }
       ]
    },
    {
       "Name":"Adam",
-      "Cards":[
+      "Hand":[
          {
             "suit":"♤",
             "Name":"7"
@@ -418,19 +312,6 @@ func handscoreHandler(w http.ResponseWriter, r *http.Request) {
          {
             "suit":"♧",
             "Name":"A"
-         }
-      ],
-      "Score":"000000000000000001411100807",
-      "Position":1,
-      "Stake":100,
-      "Pocket":[
-         {
-            "suit":"♢",
-            "Name":"J"
-         },
-         {
-            "suit":"♢",
-            "Name":"2"
          }
       ]
    }
