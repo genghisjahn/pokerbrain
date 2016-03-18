@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
@@ -26,7 +27,8 @@ func playersScoreHandler(w http.ResponseWriter, r *http.Request) {
 	}{}
 
 	players := player
-
+	body, _ := ioutil.ReadAll(r.Body)
+	_ = body
 	method := r.Method
 	if method != "POST" {
 		http.Error(w, fmt.Sprintf("%s not allowed", method), http.StatusMethodNotAllowed)
@@ -34,14 +36,13 @@ func playersScoreHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	poker.BuildDeck()
 	decoder := json.NewDecoder(r.Body)
-
 	err := decoder.Decode(&players)
 	if err != nil {
 		panic(err)
 	}
-	log.Println("***", players[0].Hand)
 	for k := range players {
 		_ = k
+		log.Println("***", players[k].Hand)
 		//p[k].Hand = p.Cards
 	}
 	t := poker.Table{}
