@@ -3,9 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/genghisjahn/pokerbrain/poker"
@@ -21,35 +21,58 @@ func main() {
 func playersScoreHandler(w http.ResponseWriter, r *http.Request) {
 	//Build an anonymous struct here
 
-	player := []struct {
+	players := []struct {
 		Name string
-		Hand []poker.Card
+		Hand []poker.Card `json:"Cards"`
 	}{}
 
-	players := player
-	body, _ := ioutil.ReadAll(r.Body)
-	_ = body
 	method := r.Method
 	if method != "POST" {
 		http.Error(w, fmt.Sprintf("%s not allowed", method), http.StatusMethodNotAllowed)
 		return
 	}
+
 	poker.BuildDeck()
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&players)
 	if err != nil {
 		panic(err)
 	}
-	for k := range players {
-		_ = k
-		log.Println("***", players[k].Hand)
-		//p[k].Hand = p.Cards
-	}
+
 	t := poker.Table{}
-	for _, p := range players {
-		_ = p
-		// temp := poker.Player{Name: p.Name, Hand: p.Hand}
-		// t.Players = append{t.Players}
+	for kp, p := range players {
+		tp := poker.Player{}
+		tp.Name = p.Name
+		for k, v := range p.Hand {
+			val, valErr := strconv.Atoi(p.Name)
+			if valErr != nil {
+				if v.Name == "A" {
+					v.High = 14
+					v.Low = 1
+				}
+				if v.Name == "K" {
+					v.High = 13
+					v.Low = 13
+				}
+				if v.Name == "Q" {
+					v.High = 12
+					v.Low = 12
+				}
+				if v.Name == "J" {
+					v.High = 11
+					v.Low = 11
+				}
+			} else {
+				v.High = val
+				v.Low = val
+			}
+			tp.Hand.Cards[k] = v
+			fmt.Println("card ", v, v.Low, v.High)
+		}
+		tp.Hand.SetScore()
+		fmt.Println(kp+1, tp.Hand, tp.Hand.Score, tp.Name)
+
+		t.Players = append(t.Players, tp)
 	}
 	pplayers := t.SortPlayerHands()
 	for _, i := range pplayers {

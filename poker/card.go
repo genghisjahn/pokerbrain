@@ -6,7 +6,7 @@ type Card struct {
 	Low  int    `json:"-"`
 	High int    `json:"-"`
 	Suit string `json:"suit"`
-	Name string `json:name"`
+	Name string `json:"Name"`
 }
 
 func (c Card) String() string {
