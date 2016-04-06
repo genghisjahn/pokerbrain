@@ -43,11 +43,29 @@ func (h *Hand) SetScore() {
 	ranks, vals := checkranks(h.Cards)
 	sort.Sort(h)
 	s := make([]int, 15, 15)
-	s[14] = h.Cards[0].High
-	s[13] = h.Cards[1].High
-	s[12] = h.Cards[2].High
-	s[11] = h.Cards[3].High
-	s[10] = h.Cards[4].High
+	if straight {
+		if h.Cards[4].High == 14 && h.Cards[3].High != 13 {
+			s[14] = h.Cards[4].Low
+			s[13] = h.Cards[0].High
+			s[12] = h.Cards[1].High
+			s[11] = h.Cards[2].High
+			s[10] = h.Cards[3].High
+
+		} else {
+			s[14] = h.Cards[0].High
+			s[13] = h.Cards[1].High
+			s[12] = h.Cards[2].High
+			s[11] = h.Cards[3].High
+			s[10] = h.Cards[4].High
+		}
+	} else {
+
+		s[14] = h.Cards[0].High
+		s[13] = h.Cards[1].High
+		s[12] = h.Cards[2].High
+		s[11] = h.Cards[3].High
+		s[10] = h.Cards[4].High
+	}
 
 	if straight && flush {
 		h.Name = "Straight Flush"
