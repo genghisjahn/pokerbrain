@@ -3,10 +3,10 @@ package poker
 import "fmt"
 
 type Card struct {
-	Low  int
-	High int
-	Suit string
-	Name string
+	Low  int    `json:"-"`
+	High int    `json:"-"`
+	Suit string `json:"suit"`
+	Name string `json:"Name"`
 }
 
 func (c Card) String() string {
