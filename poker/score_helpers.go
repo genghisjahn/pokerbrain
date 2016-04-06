@@ -1,6 +1,9 @@
 package poker
 
-import "strconv"
+import (
+	"sort"
+	"strconv"
+)
 
 var suits = []string{"s", "h", "d", "c"}
 
@@ -196,4 +199,28 @@ func GetCardCombinations(cards []Card) []Hand {
 		}
 	}
 	return hands
+}
+
+//HandItem result of 5-7 cards, the best hand
+type HandItem struct {
+	Best5 [5]Card `json:"best5"`
+	Name  string  `json:"name"`
+	Score string  `json:"score"`
+}
+
+func GetBestHand(cards []Card) (HandItem, error) {
+	result := HandItem{}
+	hands := GetCardCombinations(cards)
+	cbo := Combos{Hands: hands}
+	for k := range cbo.Hands {
+		cbo.Hands[k].SetScore()
+	}
+	sort.Sort(sort.Reverse(&cbo))
+	c := cbo.Hands[0]
+	result.Name = c.Name
+	for k, v := range c.Cards {
+		result.Best5[k] = v
+	}
+	result.Score = c.Score
+	return result, nil
 }

@@ -15,6 +15,7 @@ func main() {
 	log.Println("Started")
 	http.HandleFunc("/hand/score", handscoreHandler)
 	http.HandleFunc("/players/score", playersScoreHandler)
+	http.HandleFunc("/hand/best", handBestHandler)
 	log.Fatal(http.ListenAndServe("localhost:8888", nil))
 }
 
@@ -78,6 +79,39 @@ func playersScoreHandler(w http.ResponseWriter, r *http.Request) {
 	for _, i := range pplayers {
 		fmt.Println(i)
 	}
+}
+
+func handBestHandler(w http.ResponseWriter, r *http.Request) {
+	method := r.Method
+	if method != "GET" {
+		http.Error(w, fmt.Sprintf("%s not allowed", method), http.StatusMethodNotAllowed)
+		return
+	}
+	poker.BuildDeck()
+	dupes := make(map[string]string)
+	vals := strings.Split(r.FormValue("h"), "|")
+	cardlen := len(vals)
+	if cardlen < 5 || cardlen > 7 {
+		http.Error(w, fmt.Sprintf("You need between 5 and 7 cards, you supplied %d\n", cardlen), http.StatusBadRequest)
+		return
+	}
+	cards := make([]poker.Card, cardlen)
+	for k, v := range vals {
+		if _, ok := dupes[v]; ok {
+			http.Error(w, fmt.Sprintf("The card %v exists more than once in the hand", v), http.StatusBadRequest)
+			return
+		}
+		dupes[v] = v
+		cards[k] = poker.DeckCardMap[v]
+	}
+	result, err := poker.GetBestHand(cards)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Something went wrong: %v\n", err), http.StatusServiceUnavailable)
+		return
+	}
+	jdata, _ := json.Marshal(result)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jdata)
 }
 
 func handscoreHandler(w http.ResponseWriter, r *http.Request) {
