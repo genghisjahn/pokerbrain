@@ -89,7 +89,13 @@ func handscoreHandler(w http.ResponseWriter, r *http.Request) {
 	poker.BuildDeck()
 	hand := poker.Hand{}
 	vals := strings.Split(r.FormValue("h"), "|")
+	dupes := make(map[string]string)
 	for k, v := range vals[:5] {
+		if _, ok := dupes[v]; ok {
+			http.Error(w, fmt.Sprintf("The card %v exists more than once in the hand", v), http.StatusBadRequest)
+			return
+		}
+		dupes[v] = v
 		hand.Cards[k] = poker.DeckCardMap[v]
 	}
 	hand.SetScore()
