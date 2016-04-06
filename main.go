@@ -13,7 +13,7 @@ import (
 
 func main() {
 	log.Println("Started")
-	http.HandleFunc("/hand/score", handscoreHandler)
+	http.HandleFunc("/", handscoreHandler)
 	http.HandleFunc("/players/score", playersScoreHandler)
 	log.Fatal(http.ListenAndServe("localhost:8888", nil))
 }
