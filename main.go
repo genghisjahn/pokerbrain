@@ -87,7 +87,7 @@ func handBestHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("%s not allowed", method), http.StatusMethodNotAllowed)
 		return
 	}
-	poker.BuildDeck()
+	poker.BuildDeck2Char()
 	dupes := make(map[string]string)
 	vals := strings.Split(r.FormValue("h"), "|")
 	cardlen := len(vals)
@@ -97,12 +97,17 @@ func handBestHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	cards := make([]poker.Card, cardlen)
 	for k, v := range vals {
-		if _, ok := dupes[v]; ok {
-			http.Error(w, fmt.Sprintf("The card %v exists more than once in the hand", v), http.StatusBadRequest)
+		lowV := strings.ToLower(v)
+		if strings.HasSuffix(lowV, "1") {
+			tempS := string(lowV[0])
+			lowV = tempS + "a"
+		}
+		if _, ok := dupes[lowV]; ok {
+			http.Error(w, fmt.Sprintf("The card %v exists more than once in the hand", lowV), http.StatusBadRequest)
 			return
 		}
-		dupes[v] = v
-		cards[k] = poker.DeckCardMap[v]
+		dupes[lowV] = lowV
+		cards[k] = poker.DeckCardMapChar2[lowV]
 	}
 	result, err := poker.GetBestHand(cards)
 	if err != nil {
