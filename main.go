@@ -15,7 +15,7 @@ func main() {
 	log.Println("Started")
 	http.HandleFunc("/hand/score", handscoreHandler)
 	http.HandleFunc("/players/score", playersScoreHandler)
-	log.Fatal(http.ListenAndServe("localhost:8080", nil))
+	log.Fatal(http.ListenAndServe("localhost:8888", nil))
 }
 
 func playersScoreHandler(w http.ResponseWriter, r *http.Request) {

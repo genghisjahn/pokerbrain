@@ -2,7 +2,7 @@ package poker
 
 import "strconv"
 
-var suits = []string{"♤", "♡", "♢", "♧"}
+var suits = []string{"s", "h", "d", "c"}
 
 const (
 	HighCard      = "High Card"

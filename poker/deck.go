@@ -32,10 +32,10 @@ func (d *Deck) Shuffle(num int) {
 func BuildDeck() Deck {
 	var d = Deck{}
 	SuitMap = make(map[string]string)
-	SuitMap["♤"] = "s"
-	SuitMap["♡"] = "h"
-	SuitMap["♢"] = "d"
-	SuitMap["♧"] = "c"
+	SuitMap["s"] = "s"
+	SuitMap["h"] = "h"
+	SuitMap["d"] = "d"
+	SuitMap["c"] = "c"
 	DeckCardMap = make(map[string]Card)
 	for _, v := range suits {
 		for i := 1; i < 14; i++ {
