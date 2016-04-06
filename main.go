@@ -88,7 +88,6 @@ func handBestHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	poker.BuildDeck()
-	cards := []poker.Card{}
 	dupes := make(map[string]string)
 	vals := strings.Split(r.FormValue("h"), "|")
 	cardlen := len(vals)
@@ -96,6 +95,7 @@ func handBestHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("You need between 5 and 7 cards, you supplied %d\n", cardlen), http.StatusBadRequest)
 		return
 	}
+	cards := make([]poker.Card, cardlen)
 	for k, v := range vals {
 		if _, ok := dupes[v]; ok {
 			http.Error(w, fmt.Sprintf("The card %v exists more than once in the hand", v), http.StatusBadRequest)
