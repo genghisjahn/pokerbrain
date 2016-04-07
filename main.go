@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -123,7 +124,7 @@ func handScoreAll(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("Number of players must be between 2 and 10.  You supplied: %v", numPlayers), http.StatusBadRequest)
 	}
 
-	for _, p := range playerScore.Players {
+	for k, p := range playerScore.Players {
 		cards := []poker.Card{}
 		vp1 := poker.DeckCardMapChar2[p.Pocket[0].String2()]
 		vp2 := poker.DeckCardMapChar2[p.Pocket[1].String2()]
@@ -139,8 +140,14 @@ func handScoreAll(w http.ResponseWriter, r *http.Request) {
 		}
 		p.BestHand = result.Name
 		p.Score = result.Score
+		p.BestCards = result.Best5
+		playerScore.Players[k] = p
 		fmt.Println("Player:", p)
 	}
+	sort.Sort(sort.Reverse(&playerScore))
+	jdata, _ := json.Marshal(playerScore)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jdata)
 }
 
 func handBestHandler(w http.ResponseWriter, r *http.Request) {
