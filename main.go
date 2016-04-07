@@ -14,7 +14,7 @@ import (
 func main() {
 	log.Println("Started")
 	http.HandleFunc("/hand/score", handscoreHandler)
-	http.HandleFunc("/players/score", playersScoreHandler)
+	http.HandleFunc("/players/score", handScoreAll)
 	http.HandleFunc("/hand/best", handBestHandler)
 	log.Fatal(http.ListenAndServe("localhost:8888", nil))
 }
@@ -79,6 +79,28 @@ func playersScoreHandler(w http.ResponseWriter, r *http.Request) {
 	for _, i := range pplayers {
 		fmt.Println(i)
 	}
+}
+
+func handScoreAll(w http.ResponseWriter, r *http.Request) {
+	method := r.Method
+	if method != "POST" {
+		http.Error(w, fmt.Sprintf("%s not allowed", method), http.StatusMethodNotAllowed)
+		return
+	}
+	players := []struct {
+		GUID string       `json:"guid"`
+		Hand []poker.Card `json:"cards"`
+	}{}
+	poker.BuildDeck2Char()
+	dupes := make(map[string]string)
+	_ = dupes
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&players)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error decoding json: %v", err), http.StatusBadRequest)
+		return
+	}
+	fmt.Println(players)
 }
 
 func handBestHandler(w http.ResponseWriter, r *http.Request) {
