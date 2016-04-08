@@ -121,13 +121,8 @@ func handScoreAll(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, fmt.Sprintf("The card %v exists more than once in the cards supplied", v), http.StatusBadRequest)
 			return
 		}
-
-		if !strings.Contains("shcd", strings.ToLower(v.Suit)) || len(v.Suit) != 1 {
-			http.Error(w, fmt.Sprintf("Valid card suits are s,h,c,d.  You provided %v", v.Suit), http.StatusBadRequest)
-			return
-		}
-		if !strings.Contains("123456789tjqka", strings.ToLower(v.Name)) || len(v.Name) != 1 {
-			http.Error(w, fmt.Sprintf("Valid card names are 1,2,3,4,5,6,7,8,9,t,j,q,k,a.  You provided %v", v.Name), http.StatusBadRequest)
+		if errV := poker.ValidCard(v); errV != nil {
+			http.Error(w, errV.Error(), http.StatusBadRequest)
 			return
 		}
 		cardDupes[v.String()] = v.String()
@@ -216,6 +211,9 @@ func handscoreHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, fmt.Sprintf("The card %v exists more than once in the hand", v), http.StatusBadRequest)
 			return
 		}
+		//TODO the card validition should be done in the
+		//poker.DeckCardMap and Poker.DeckCardMapChar2
+		//If it doesn't exist in that map, that it it's not valid
 		dupes[v] = v
 		hand.Cards[k] = poker.DeckCardMap[v]
 	}

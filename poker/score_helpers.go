@@ -1,8 +1,10 @@
 package poker
 
 import (
+	"fmt"
 	"sort"
 	"strconv"
+	"strings"
 )
 
 var suits = []string{"s", "h", "d", "c"}
@@ -20,6 +22,23 @@ const (
 	LOW           = false
 	HIGH          = true
 )
+
+func ValidCard(c Card) error {
+	if !strings.Contains("shcd", strings.ToLower(c.Suit)) || len(c.Suit) != 1 {
+		if c.Suit == "" {
+			c.Suit = "[empty string]"
+		}
+		return fmt.Errorf("Valid card suits are s,h,c,d.  You provided %v", c.Suit)
+	}
+	if !strings.Contains("123456789tjqka", strings.ToLower(c.Name)) || len(c.Name) != 1 {
+		if c.Name == "" {
+			c.Name = "[empty string]"
+		}
+		//http.Error(w, fmt.Sprintf("Valid card names are 1,2,3,4,5,6,7,8,9,t,j,q,k,a.  You provided %v", v.Name), http.StatusBadRequest)
+		return fmt.Errorf("Valid card names are 1,2,3,4,5,6,7,8,9,t,j,q,k,a.  You provided %v", c.Name)
+	}
+	return nil
+}
 
 func checkunique(cards [5]Card) bool {
 	c := make(map[int]int)
