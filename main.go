@@ -121,6 +121,15 @@ func handScoreAll(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, fmt.Sprintf("The card %v exists more than once in the cards supplied", v), http.StatusBadRequest)
 			return
 		}
+
+		if !strings.Contains("shcd", strings.ToLower(v.Suit)) || len(v.Suit) != 1 {
+			http.Error(w, fmt.Sprintf("Valid card suits are s,h,c,d.  You provided %v", v.Suit), http.StatusBadRequest)
+			return
+		}
+		if !strings.Contains("123456789tjqka", strings.ToLower(v.Name)) || len(v.Name) != 1 {
+			http.Error(w, fmt.Sprintf("Valid card names are 1,2,3,4,5,6,7,8,9,t,j,q,k,a.  You provided %v", v.Name), http.StatusBadRequest)
+			return
+		}
 		cardDupes[v.String()] = v.String()
 	}
 	numPlayers := len(playerScore.Players)
