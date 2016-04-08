@@ -111,7 +111,7 @@ func handScoreAll(w http.ResponseWriter, r *http.Request) {
 	}
 	lenCards := len(playerScore.Community)
 	if lenCards > 5 {
-		http.Error(w, fmt.Sprintf("Maximum no. of community cards is 5.  You supplied %v", lenCards))
+		http.Error(w, fmt.Sprintf("Maximum no. of community cards is 5.  You supplied %v", lenCards), http.StatusBadRequest)
 	}
 	for _, c := range playerScore.Community {
 		cardCheck = append(cardCheck, c)
